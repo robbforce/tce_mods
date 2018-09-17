@@ -1,0 +1,146 @@
+{
+  modInfo:
+  {
+    id: horse
+    name: Horse
+    authors: fubarbarian
+    version: "0.0.1.0"
+    preview: preview_horse
+    twitter: n/a
+    weblink: n/a
+    mail: test@email.com
+    description: "Adds a horse that can be recruited at normal native villages. It behaves like a normal pack animal, can carry crates or can be a fast mount."
+    defaultLang: en
+  }
+  imageData:[
+    {
+      id: preview_horse
+      file: horse/preview_horse.png
+    }
+    {
+      id: sprite_horse_01
+      file: horse/sprite_horse_01.png
+    }
+    {
+      id: face_horse_01
+      file: horse/face_horse_01.png
+    }
+    {
+      id: face_horse_01_small
+      file: horse/face_horse_01_small.png
+    }
+    {
+      id: minisprite_horse_01
+      file: horse/minisprite_horse_01.png
+    }
+    {
+      id: sprite_horse_02
+      file: horse/sprite_horse_02.png
+    }
+    {
+      id: face_horse_02
+      file: horse/face_horse_02.png
+    }
+    {
+      id: face_horse_02_small
+      file: horse/face_horse_02_small.png
+    }
+    {
+      id: minisprite_horse_02
+      file: horse/minisprite_horse_02.png
+    }
+    {
+      id: sprite_horse_03
+      file: horse/sprite_horse_03.png
+    }
+    {
+      id: face_horse_03
+      file: horse/face_horse_03.png
+    }
+    {
+      id: face_horse_03_small
+      file: horse/face_horse_03_small.png
+    }
+    {
+      id: minisprite_horse_03
+      file: horse/minisprite_horse_03.png
+    }
+    {
+      id: crates_horse
+      file: horse/crates_horse.png
+    }
+    {
+      id: saddle_horse
+      type: slotted
+      file: horse/saddle_horse.png
+    }
+  ],
+  modEntries:[
+    {
+      id: anm-horse
+      title: txt-anm-horse-title
+      description: txt-anm-horse
+      health: 8
+      capacity: 3
+      flags: +animal +packAnimal +mammal
+      debugCategory: Pack Animal
+      variations: [
+        {
+          gender: male
+          name: animalMale
+          sprite: sprite_horse_01
+          portrait: face_horse_01
+          miniSprite: minisprite_horse_01
+        }
+        {
+          gender: female
+          name: animalFemale
+          sprite: sprite_horse_02
+          portrait: face_horse_02
+          miniSprite: minisprite_horse_02
+        }
+        {
+          gender: female
+          name: animalFemale
+          sprite: sprite_horse_03
+          portrait: face_horse_03
+          miniSprite: minisprite_horse_03
+        }
+      ]
+      extraSprites: 
+      {
+        crates: crates_horse
+        saddle: saddle_horse
+      }
+      isMountable: true
+      mountedStatuses: st-mount-3
+      bonus: {capacity: -2, reqMounted: true}
+      mountedDice: dc-donkey-1!5
+      levels: [
+        {}
+        {dice: dc-donkey-1!4}
+        {dice: dc-donkey-1!5, mountedDice: dc-donkey-1!5}
+        {dice: dc-donkey-1!6, mountedDice: dc-donkey-1!6}}
+      ]
+    }
+    # Recruit in generic village
+    {
+      targetId: +evt-village-recruit-select-animal::select
+      ref: evt-village-recruit-horse
+    }
+    {
+      id: evt-village-recruit-horse
+      reqLocationFlags: +tribeWarriors | +tribeScouts | +tribeShamans
+      npc: anm-horse
+      npcEvents: {
+        actions: {
+          actionText: txt-anm-horse-title
+          text: txt-evt-village-recruit-animal-generic
+          setPartyFlags: +recruitedSomebody
+          addNPC: true
+          select: evt-village-main-update
+        }
+      }
+    }
+  ]
+}

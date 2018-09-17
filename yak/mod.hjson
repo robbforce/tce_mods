@@ -1,0 +1,345 @@
+{
+  modInfo:
+  {
+    id: yak
+    name: Yak
+    authors: fubarbarian
+    version: "0.0.1.0"
+    preview: preview_yak
+    twitter: n/a
+    weblink: n/a
+    mail: test@email.com
+    description: "Adds a yak that can be recruited in arctic villages. A pack animal adapted to high altitude and cold climates."
+    defaultLang: en
+  }
+  imageData:[
+    {
+      id: preview_yak
+      file: yak/preview_yak.png
+    }
+    {
+      id: sprite_yak_01
+      file: yak/sprite_yak_01.png
+    }
+    {
+      id: face_yak_01
+      file: yak/face_yak_01.png
+    }
+    {
+      id: minisprite_yak_01
+      file: yak/minisprite_yak_01.png
+    }
+    {
+      id: yak_milk
+      file: yak/yak_milk.png
+    }
+    {
+      id: yak_cheese_sour
+      file: yak/yak_cheese_sour.png
+    }
+    {
+      id: yak_cheese_tangy
+      file: yak/yak_cheese_tangy.png
+    }
+    {
+      id: yak_cheese_perfect
+      file: yak/yak_cheese_perfect.png
+    }
+  ],
+  modEntries:[
+    {
+      id: anm-yak-female
+      debugCategory: Pack Animal
+      title: txt-anm-yak-title
+      description: txt-anm-yak
+      variations: [
+        {
+          gender: female
+          name: animalFemale
+          sprite: sprite_yak_01
+          portrait: face_yak_01
+          miniSprite: minisprite_yak_01
+        }
+        {
+          gender: female
+          name: animalFemale
+          sprite: sprite_yak_02
+          portrait: face_yak_02
+          miniSprite: minisprite_yak_02
+        }
+        {
+          gender: female
+          name: animalFemale
+          sprite: sprite_yak_03
+          portrait: face_yak_03
+          miniSprite: minisprite_yak_03
+        }
+      ]
+      health: 4
+      capacity: 1
+      flags: +animal +packAnimal +mammal +yak
+      isMountable: false
+      levels: [
+        {statuses: st-produce-yak-milk}
+        {dice: dc-yak-1!3}
+        {dice: dc-yak-1!4}
+        {dice: dc-yak-1!5}
+      ]
+    }
+    {
+      id: anm-yak-male
+      debugCategory: Pack Animal
+      title: txt-anm-yak-title
+      description: txt-anm-yak
+      variations: [
+        {
+          gender: male
+          name: animalMale
+          sprite: sprite_yak_04
+          portrait: face_yak_04
+          miniSprite: minisprite_yak_01
+        }
+        {
+          gender: male
+          name: animalMale
+          sprite: sprite_yak_05
+          portrait: face_yak_05
+          miniSprite: minisprite_yak_02
+        }
+        {
+          gender: male
+          name: animalMale
+          sprite: sprite_yak_06
+          portrait: face_yak_06
+          miniSprite: minisprite_yak_03
+        }
+      ]
+      health: 5
+      capacity: 1
+      flags: +animal +packAnimal +mammal +yak
+      isMountable: false
+      levels: [
+        {dice: dc-yak-1!3}
+        {dice: dc-yak-1!4}
+        {dice: dc-yak-1!5}
+        {dice: dc-yak-2!6}
+      ]
+    }
+    {
+      targetId: +cl-celebration-audience::lines
+      charEvents: {reqCharFlags: +yak}
+      text: txt-cl-celebration-audience-yak
+    }
+    # Recruit in generic village.
+    {
+      targetId: +evt-village-recruit-select-animal::select
+      ref: evt-village-recruit-yak
+    }
+    {
+      id: evt-village-recruit-yak
+      reqLocationFlags: +tribeWarriors | +tribeScouts | +tribeShamans
+      npc: anm-yak
+      npcEvents: {
+        actions: {
+          actionText: txt-anm-yak-title
+          text: txt-evt-village-recruit-animal-generic
+          setPartyFlags: +recruitedSomebody
+          addNPC: true
+          select: evt-village-main-update
+        }
+      }
+    }
+    # If the yak is female and there's an animal handler or bedouin, then produce milk every 3 days.
+    {
+      id: st-produce-yak-milk
+      debugCategory: Animals
+      title: txt-st-produce-yak-milk-title
+      description: txt-st-produce-yak-milk
+      sprite: st_produce_milk
+      dayEvents: {
+        reqAge: 3..
+        charEvents: {
+          reqCharFlags: +nativeAnimalHandler | +bedouin
+          items: {it-yak-milk: 1}
+        }
+        resetStatusAge: true
+      }
+    }
+    # yak milk spoils very quickly, but can be consumed for sanity, or made into cheese by a mid-level cook.
+    {
+      id: it-yak-milk
+      name: txt-it-yak-milk-name
+      description: txt-it-yak-milk
+      debugCategory: sanity
+      sprite: yak_milk
+      maxStack: 10
+      value: 5
+      autoRemove: true
+      dayEvents: {
+        slots: 1
+        reqPartyStatus: -expire-yak-milk
+        setPartyStatus: +expire-yak-milk
+      }
+      useEvents: {
+        select: [
+          {
+            prio: 0
+            charEvents: {reqStatus: +cookSanity-4, chat: cl-cook-meat}
+            removeItem: true
+            items: {it-yak-cheese-perfect: 1}
+          }
+          {
+            prio: 1
+            charEvents: {reqStatus: +cookSanity-3, chat: cl-cook-meat}
+            removeItem: true
+            items: {it-yak-cheese-tangy: 1}
+          }
+          {
+            prio: 2
+            charEvents: {reqStatus: +cookSanity-2, chat: cl-cook-meat-fail}
+            removeItem: true
+            items: {it-yak-cheese-sour: 1}
+          }
+          {
+            prio: 3
+            sanity: 5
+            playSound: sfx_drink_var1 sfx_drink_var2
+            chat: cl-it-yak-milk
+            removeItem: true
+          }
+        ]
+      }
+    }
+    # Milk can be used for hydration if the trek is out of water.
+    #{ 
+    #  targetId: +tl-desert::moveCost
+    #  data: {it-yak-milk: 5}
+    #}
+    {
+      id: st-expire-yak-milk
+      debugCategory: internal
+      dayEvents: [
+        {
+          prio: 0
+          optional: true
+          reqItems: {it-yak-milk: 0}
+          removeStatus: true
+        }
+        {
+          prio: 1
+          # Arctic conditions extend the shelf life significantly.
+          reqBiomeFlags: +arctic
+          reqAge: 12..
+          # There's a small chance the milk won't spoil immediately.
+          select: [
+            {slots: 3}
+            {
+              slots: 7
+              reqItems: {it-yak-milk: 1..}
+              items: {it-yak-milk: -1}
+              resetStatusAge: true
+            }
+          ]
+        }
+        {
+          prio: 1
+          reqBiomeFlags: -arctic
+          reqAge: 4..
+          # There's a very small chance the milk won't spoil immediately.
+          select: [
+            {slots: 1}
+            {
+              slots: 9
+              reqItems: {it-yak-milk: 1..}
+              items: {it-yak-milk: -1}
+              resetStatusAge: true
+            }
+          ]
+        }
+      ]
+    }
+    {
+      id: cl-it-yak-milk
+      lines: [
+        {text: txt-cl-it-yak-milk, reqCharFlags: +humanoid}
+      ]
+    }
+    {
+      id: it-yak-cheese-sour
+      name: txt-it-yak-cheese-sour-name
+      description: txt-it-yak-cheese-sour
+      debugCategory: sanity
+      sprite: yak_cheese_sour
+      value: 3
+      maxStack: 10
+      useEvents: [
+        {
+          slots: 1
+          sanity: 7
+          setPartyFlags: +nonCocaUsers
+          playSound: sfx_eat_var1 sfx_eat_var2
+          chat: cl-item-yak-cheese-sour
+          removeItem: true
+        }
+      ]   
+    }
+    {
+      id: it-yak-cheese-tangy
+      name: txt-it-yak-cheese-tangy-name
+      description: txt-it-yak-cheese-tangy
+      debugCategory: sanity
+      sprite: yak_cheese_tangy
+      value: 5
+      maxStack: 10
+      useEvents: [
+        {
+          slots: 1
+          sanity: 10
+          setPartyFlags: +nonCocaUsers
+          playSound: sfx_eat_var1 sfx_eat_var2
+          chat: cl-item-yak-cheese-tangy
+          removeItem: true
+        }
+      ]   
+    }
+    {
+      id: it-yak-cheese-perfect
+      name: txt-it-yak-cheese-perfect-name
+      description: txt-it-yak-cheese-perfect
+      debugCategory: sanity
+      sprite: yak_cheese_perfect
+      value: {base: 5, mission: 10, village: 10, karma: 1}
+      maxStack: 10
+      useEvents: [
+        {
+          slots: 1
+          sanity: 15
+          setPartyFlags: +nonCocaUsers
+          playSound: sfx_eat_var1 sfx_eat_var2
+          chat: cl-item-yak-cheese-perfect
+          removeItem: true
+        }
+      ]   
+    }
+    {
+      id: cl-item-yak-cheese-sour
+      lines: [
+        {text: txt-cl-item-yak-cheese-sour, reqCharFlags: +humanoid}
+      ]
+    }
+    {
+      id: cl-item-yak-cheese-tangy
+      lines: [
+        {text: txt-cl-item-yak-cheese-tangy, reqCharFlags: +humanoid}
+      ]
+    }
+    {
+      id: cl-item-yak-cheese-perfect
+      lines: [
+        {text: txt-cl-item-yak-cheese-perfect, reqCharFlags: +humanoid}
+      ]
+    }
+    # Yaks are adapted to cold weather and high altitude, so they will suffer from heat exhaustion
+    # in temperatures above 15 °C (59 °F). Create an event when travelling in jungle or desert.
+  ]
+}
