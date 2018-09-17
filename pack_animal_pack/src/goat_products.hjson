@@ -23,8 +23,8 @@
     description: txt-it-goat-milk
     debugCategory: sanity
     sprite: goat_milk
-    maxStack: 10
     value: 5
+    maxStack: 10
     autoRemove: true
     dayEvents: {
       slots: 1
@@ -128,6 +128,7 @@
     sprite: goat_cheese_sour
     value: 3
     maxStack: 10
+    autoRemove: true
     useEvents: [
       {
         slots: 1
@@ -154,6 +155,7 @@
     sprite: goat_cheese_tangy
     value: 5
     maxStack: 10
+    autoRemove: true
     useEvents: [
       {
         slots: 1
@@ -178,8 +180,9 @@
     description: txt-it-goat-cheese-perfect
     debugCategory: sanity
     sprite: goat_cheese_perfect
-    value: {base: 5, mission: 10, village: 10, karma: 1}
+    value: {base: 5, mission: 15, polarStation: 20, village: 10, karma: 1}
     maxStack: 10
+    autoRemove: true
     useEvents: [
       {
         slots: 1
