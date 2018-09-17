@@ -1,0 +1,59 @@
+[
+  # Recruit in generic village
+  {
+    targetId: +evt-village-recruit-select-animal::select
+    data: [
+      "evt-village-recruit-horse",
+      "evt-village-recruit-goat"
+    ]
+  }
+
+  # Recruit a horse to the party.
+  {
+    id: evt-village-recruit-horse
+    reqLocationFlags: +tribeWarriors | +tribeScouts | +tribeShamans
+    npc: anm-horse
+    npcEvents: {
+      actions: {
+        actionText: txt-anm-horse-title
+        text: txt-evt-village-recruit-animal-generic
+        setPartyFlags: +recruitedSomebody
+        addNPC: true
+        select: evt-village-main-update
+      }
+    }
+  }
+
+  # I don't want to increase the odds of getting a goat, so use a single recruit event
+  # with a select because we have an entry for each gender.
+  {
+    id: evt-village-recruit-goat
+    reqLocationFlags: +tribeWarriors | +tribeScouts | +tribeShamans
+    select: [
+      {
+        npc: anm-goat-female
+        npcEvents: {
+          actions: {
+            actionText: txt-anm-goat-title
+            text: txt-evt-village-recruit-animal-generic
+            setPartyFlags: +recruitedSomebody
+            addNPC: true
+            select: evt-village-main-update
+          }
+        }
+      }
+      {
+        npc: anm-goat-male
+        npcEvents: {
+          actions: {
+            actionText: txt-anm-goat-title
+            text: txt-evt-village-recruit-animal-generic
+            setPartyFlags: +recruitedSomebody
+            addNPC: true
+            select: evt-village-main-update
+          }
+        }
+      }
+    ]
+  }
+]

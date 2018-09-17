@@ -1,0 +1,338 @@
+[
+  # Update the existing blessings where there are conflicts, to avoid granting an extra set of claws.
+  {
+    targetId: /evt-blessingTemple-drink::select
+    select: [
+      {
+        prio: 1
+        slots: 1
+        reqStatus: -blessingPureMind
+        setStatus: +blessingPureMind
+        removeStatusWithFlags: +ailment
+        text: txt-evt-blessingTemple-drink-1
+      }
+      {
+        prio: 1
+        slots: 1
+        reqStatus: -blessingRegeneration -mutateLizardFlesh
+        setStatus: +blessingRegeneration -infected
+        text: txt-evt-blessingTemple-drink-2
+        health: 10
+      }
+      {
+        prio: 1
+        slots: 1
+        reqStatus: -blessingHoly
+        setStatus: +blessingHoly
+        text: txt-evt-blessingTemple-drink-3
+        standing: 3
+      }
+      {
+        prio: 1
+        slots: 1
+        reqStatus: -blessingInhumanStrength
+        setStatus: +blessingInhumanStrength
+        text: txt-evt-blessingTemple-drink-4
+      }
+      {
+        prio: 1
+        slots: 1
+        reqStatus: -blessingLeatherskin -mutateDermalArmour
+        setStatus: +blessingLeatherskin
+        text: txt-evt-blessingTemple-drink-5
+      }
+      {
+        prio: 1
+        slots: 1
+        reqStatus: -blessingClaws -mutateClaws
+        setStatus: +blessingClaws
+        text: txt-evt-blessingTemple-drink-6
+      }
+      {
+        prio: 2
+        text: txt-evt-blessingTemple-drink-7
+      }
+    ]
+  }
+
+  # Tentacle grants a combat die with tentacle attacks.
+  {
+    id: df-twhip_1
+    sprite: hud_dice_symbol_twhip_1
+    bgSprite: hud_dice_bg_attack_1.png
+  }
+  {
+    id: df-twhip_2
+    sprite: hud_dice_symbol_twhip_2
+    bgSprite: hud_dice_bg_attack_1.png
+  }
+  {
+    id: dp-tentacle-smack
+    name: txt-attack-name-tentacle-smack
+    faces: twhip_1
+    damage: 1
+    targetBuff: buf-stun
+    sound: sfx_whipCrack
+  }
+  {
+    id: dp-tentacle-slash
+    name: txt-attack-name-tentacle-slash
+    faces: twhip_1 sword
+    damage: 3
+    targetBuff: buf-stun
+    sound: sfx_whipCrack
+  }
+  {
+    id: dp-tentacle-constrict
+    name: txt-attack-name-tentacle-constrict
+    faces: twhip_2
+    damage: 2
+    targetBuff: buf-stun-2
+    sound: sfx_whipCrack
+  }
+  {
+    id: dp-tentacle-strangle
+    name: txt-attack-name-tentacle-strangle
+    faces: twhip_2 stability
+    damage: 4
+    targetBuff: buf-stun-2
+    sound: sfx_whipCrack
+  }
+  {
+    id: dc-attack-mutateTentacle
+    sprite: hud_dice_bg_animal_1.png
+    faces: tentacle tentacle twhip_1 twhip_1 twhip_2 twhip_2
+  }
+  {
+    id: st-mutateTentacle
+    important: true
+    debugCategory: mutation
+    title: txt-st-mutateTentacle-title
+    description: txt-st-mutateTentacle
+    sprite: st_mutate_tentacle
+    bonus: {dice: dc-attack-mutateTentacle}
+  }
+  
+  # Lizard flesh grants improved regenaration.
+  {
+    id: st-mutateLizardFlesh
+    important: true
+    debugCategory: mutation
+    title: txt-st-mutateLizardFlesh-title
+    description: txt-st-mutateLizardFlesh
+    sprite: st_mutate_lizard
+    bonus: {healthRegen: 0.8}
+  }
+  
+  # Ominous aura adds static creature avoidance and prevents villages from following the party.
+  {
+    id: st-mutateOminousAura
+    important: true
+    debugCategory: mutation
+    title: txt-st-mutateOminousAura-title
+    description: txt-st-mutateOminousAura
+    sprite: st_mutate_aura
+    bonus: {zoneEventChance: -0.3}
+  }
+  # Redirect to a custom leave event if an aura is present.
+  {
+    targetId: /evt-village-actions::select
+    partyEvents: [
+      {
+        actions: [
+          evt-village-familyAmulet
+          evt-village-quest-letter
+          evt-village-rest
+          evt-village-recruit
+          evt-village-trade
+          evt-village-beastMaster
+        ]
+      }
+      {
+        charEvents: [
+          {
+            optional: true
+            reqStatus: +mutateOminousAura
+            actions: evt-village-leave-aura
+          }
+          {
+            optional: true
+            charEvents: {optional: false, count: all, reqStatus: -mutateOminousAura}
+            actions: evt-village-leave
+          }
+        ]
+      }
+    ]
+  }
+  {
+    id: evt-village-leave-aura
+    actionText: txt-evt-leave-action
+    alwaysShown: true
+    select: [
+      {
+        reqPartyFlags: +escortVillagerShrineInfo
+        setPartyFlags: -escortVillagerShrineInfo
+        charEvents: {reqCharFlags: +escortVillager, text: txt-evt-village-leave-escort}
+        posTile: {locationFlags: +shrine}
+        revealTiles: {radius: 1, centerCam: true}
+      }
+      {
+        prio: 1
+        charEvents: [
+          {
+            optional: true
+            reqCharFlags: -special +humanoid
+            text: txt-evt-village-leave
+          }
+          {
+            optional: true
+            count: all
+            reqCharFlags: +special | -humanoid
+            text: txt-evt-village-leave-1
+          }
+          {
+            optional: true
+            chance: 0.3
+            reqLocationFlags: +idolVillage
+            reqStatus: +kleptomania
+            setLocationFlags: -idolVillage
+            setStatus: +kleptomania-idol
+          }
+          {
+            optional: true
+            chance: 0.6
+            reqStatus: +racist
+            text: txt-evt-village-leave-2
+          }
+          {
+            optional: true
+            chance: 0.3
+            reqCharFlags: +native -slave
+            text: txt-evt-village-leave-3
+          }
+        ]
+        partyEvents: [
+          # With a suffocating presence around, the villagers will be happy to see us leave during a wedding celebration.
+          {
+            optional: true
+            reqLocationFlags: +wedding
+            setLocationFlags: -wedding
+            standing: +1
+            charEvents: {
+              reqStatus: +mutateOminousAura
+              text: txt-evt-village-leave-wedding-aura
+            }
+          }
+          # Better to just leave the trek alone...
+          {
+            optional: true
+            chance: 0.5
+            reqStanding: -3..-1
+            text: txt-evt-village-leave-lowstanding-aura
+          }
+          {
+            optional: true
+            reqStanding: -10..-4
+            text: txt-evt-village-leave-badstanding-aura
+          }
+        ]
+      }
+    ]
+  }
+  
+  # Dermal armour grants a special defense die.
+  {
+    id: dc-defend-mutateDermalArmour
+    sprite: hud_dice_bg_animal_2.png
+    faces: shell shell shield shield shield stability
+  }
+  {
+    id: st-mutateDermalArmour
+    important: true
+    debugCategory: mutation
+    title: txt-st-mutateDermalArmour-title
+    description: txt-st-mutateDermalArmour
+    sprite: st_mutate_armour
+    bonus: {dice: dc-defend-mutateDermalArmour}
+  }
+  
+  # Venomous claws grant a combat die with claw attacks that leave a poison debuff.
+  {
+    id: df-vclaw_1
+    sprite: hud_dice_symbol_claw_1.png
+    bgSprite: hud_dice_bg_attack_1.png
+  }
+  {
+    id: df-vclaw_2
+    sprite: hud_dice_symbol_claw_2.png
+    bgSprite: hud_dice_bg_attack_1.png
+  }
+  {
+    id: dc-attack-mutateClaws
+    sprite: hud_dice_bg_animal_2.png
+    faces: vclaw_1 vclaw_1 vclaw_1 vclaw_2 vclaw_2 vclaw_2
+  }
+  {
+    id: dp-attack-vclaw-1
+    name: txt-attack-name-vclaw-1
+    faces: vclaw_1
+    damage: 2
+    debugCategory: mutation
+    sound: sfx_combat_claw_2
+    targetBuff: buf-poison
+  }
+  {
+    id: dp-attack-vclaw-2
+    name: txt-attack-name-vclaw-2
+    faces: vclaw_2
+    damage: 4
+    debugCategory: mutation
+    sound: sfx_combat_claw_2
+    targetBuff: buf-poison
+  }
+  {
+    id: st-mutateClaws
+    important: true
+    debugCategory: mutation
+    title: txt-st-mutateClaws-title
+    description: txt-st-mutateClaws
+    sprite: res_status_claws.png
+    bonus: {dice: dc-attack-mutateClaws}
+  }
+  
+  # Keratin horns grant a combat die with horn attacks that can leave a bleed debuff.
+  {
+    id: df-mhorns
+    sprite: hud_dice_symbol_mhorns
+    bgSprite: hud_dice_bg_attack_1.png
+  }
+  {
+    id: dc-attack-mutateHorns
+    sprite: hud_dice_bg_animal_2.png
+    faces: ram ram ram ram mhorns mhorns
+  }
+  {
+    id: dp-attack-horns
+    name: txt-attack-name-64
+    faces: mhorns
+    damage: 4
+    sound: combat_attack_1
+  }
+  {
+    id: dp-attack-horns-gore
+    name: txt-attack-name-horns-gore
+    faces: mhorns sword
+    damage: 4
+    targetBuff: buf-bleeding-normal
+    sound: combat_attack_1
+  }
+  {
+    id: st-mutateHorns
+    important: true
+    debugCategory: mutation
+    title: txt-st-mutateHorns-title
+    description: txt-st-mutateHorns
+    sprite: st_mutate_horns
+    bonus: {dice: dc-attack-mutateHorns}
+  }
+]

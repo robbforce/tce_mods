@@ -1,0 +1,220 @@
+[
+  # Add a separate "Sacrifice a goat" action first.
+  {
+    targetId: *evt-altar-actions
+    actions: [evt-altar-drop, evt-altar-sacrifice-actions, evt-altar-revive, evt-leave]
+  }
+  {
+    id: evt-altar-sacrifice-actions
+    alwaysShown: true
+    actionText: txt-evt-altar-sacrifice-action
+    text: txt-evt-altar-sacrifice
+    charEvents: {optional: false, count: any, reqCharFlags: +goat}
+    select: evt-altar-sacrifice
+  }
+  
+  # Create an action per goat for great old one sacrifices if the party has the Cthulhu quest followed
+  # by standard sacrifice actions that will grant enough karma to resurrect a dead party member.
+  {
+    id: evt-altar-sacrifice
+    charEvents: [
+      # To sacrifice to a Great Old One.
+      {
+        optional: true
+        reqPartyStatus: +sacrifice-goat
+        charEvents: {reqCharFlags: +cultist}
+        count: any
+        reqCharFlags: +goat
+        actions: {
+          actionText: txt-evt-altar-sacrifice-goat-action
+          text: txt-evt-altar-sacrifice-goat-done
+          removeCharacter: true
+          setPartyFlags: +sacrificed-goat
+          # Grant a mutation to a cultist and add a sacrificed-goat flag to them.
+          charEvents: {
+            reqCharFlags: +cultist
+            count: any
+            setCharFlags: -sacrificed-goat
+            actions: {
+              actionText: txt-evt-altar-pick-cultist-action
+              setCharFlags: +sacrificed-goat
+              partyEvents: [
+                {ref: evt-mutate-cultist}
+                {ref: evt-traumatize-cultist}
+                {ref: evt-superstitious-angry}
+              ]
+              select: evt-altar-actions
+            }
+          }
+        }
+      }
+      # To add 60 karma to the party.
+      {
+        optional: true
+        count: any
+        reqCharFlags: +goat
+        actions: {
+          actionText: txt-evt-altar-goat-action
+          text: txt-evt-altar-goat-done
+          storeCharacter: true
+          setCharFlags: +dead
+          karma: 60
+          partyEvents: evt-superstitious-angry
+          select: evt-altar-actions
+        }
+      }
+    ]
+    actions: {actionText: txt-evt-altar-sacrifice-goat-cancel-action, text: txt-evt-altar-sacrifice-goat-cancel, select: evt-altar-actions}
+  }
+
+  # If the great old one sacrifice is selected then mutate and traumatize the cultist.
+  {
+    id: evt-mutate-cultist
+    charEvents: {
+      optional: true
+      reqCharFlags: +sacrificed-goat
+      chat: cl-mutate-cultist
+      select: [
+        {
+          prio: 1
+          slots: 1
+          reqStatus: -mutateTentacle
+          setStatus: +mutateTentacle
+          text: txt-evt-mutate-cultist-tentacle
+        }
+        {
+          prio: 1
+          slots: 1
+          reqStatus: -mutateLizardFlesh -blessingRegeneration
+          setStatus: +mutateLizardFlesh
+          text: txt-evt-mutate-cultist-flesh
+          health: 10
+        }
+        {
+          prio: 1
+          slots: 1
+          reqStatus: -mutateOminousAura
+          setStatus: +mutateOminousAura
+          text: txt-evt-mutate-cultist-aura
+        }
+        {
+          prio: 1
+          slots: 1
+          reqStatus: -blessingInhumanStrength
+          setStatus: +blessingInhumanStrength
+          text: txt-evt-mutate-cultist-strength
+        }
+        {
+          prio: 1
+          slots: 1
+          reqStatus: -mutateDermalArmour -blessingLeatherskin
+          setStatus: +mutateDermalArmour
+          text: txt-evt-mutate-cultist-armour
+        }
+        {
+          prio: 1
+          slots: 1
+          reqStatus: -mutateClaws -blessingClaws
+          setStatus: +mutateClaws
+          text: txt-evt-mutate-cultist-claws
+        }
+        {
+          prio: 1
+          slots: 1
+          reqStatus: -mutateHorns
+          setStatus: +mutateHorns
+          text: txt-evt-mutate-cultist-horns
+        }
+        {
+          prio: 2
+          text: txt-evt-mutate-cultist-none
+        }
+      ]
+    }
+  }
+  {
+    id: evt-traumatize-cultist
+    charEvents: {
+      optional: true
+      reqCharFlags: +sacrificed-goat
+      select: [
+        {
+          slots: 1
+          reqStatus: -paranoid -blessingPureMind
+          setStatus: +st-paranoid
+        }
+        {
+          slots: 1
+          reqStatus: -claustrophobic -blessingPureMind
+          setStatus: +st-claustrophobic
+        }
+        {
+          slots: 1
+          reqStatus: -lepidopterophobia -blessingPureMind
+          setStatus: +st-lepidopterophobia
+        }
+        {
+          slots: 1
+          reqStatus: -kleptomania -blessingPureMind
+          setStatus: +st-kleptomania
+        }
+        {
+          slots: 1
+          reqStatus: -pyromaniac -blessingPureMind
+          setStatus: +pyromaniac
+        }
+        {
+          slots: 1
+          reqStatus: -acrophobia -blessingPureMind
+          setStatus: +st-acrophobia
+        }
+        {
+          slots: 1
+          reqStatus: -dendrophobia -blessingPureMind
+          setStatus: +st-dendrophobia
+        }
+      ]
+    }
+  }
+  {
+    id: cl-mutate-cultist
+    lines: [
+      {text: txt-cl-mutate-cultist, reqCharFlags: +humanoid}
+    ]
+  }
+  
+  # Create some distinction in the text when reviving an animal.
+  {
+    targetId: /evt-altar-revive::storeEvents
+    storeEvents: {
+      count: ..4
+      reqCharFlags: +dead
+      select: [
+        {
+          slots: 1
+          reqCharFlags: +humanoid
+          actions: {
+            actionText: txt-evt-altar-revive-action-1
+            text: txt-evt-altar-revive-1
+            restoreCharacter: true
+            incAchievement: ach-revive
+            karma: -60
+            select: evt-altar-actions
+          }
+        }
+        {
+          slots: 1
+          reqCharFlags: +animal
+          actions: {
+            actionText: txt-evt-altar-revive-action-1
+            text: txt-evt-altar-revive-animal
+            restoreCharacter: true
+            incAchievement: ach-revive
+            karma: -60
+            select: evt-altar-actions
+          }
+        }
+      ]
+    }
+  }
+]

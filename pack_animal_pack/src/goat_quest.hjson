@@ -1,0 +1,77 @@
+[
+  # If there's a cultist in the party, add a random quest to sacrifice a goat to a Great Old One.
+  {
+    targetId: +evt-harbor-quest-offer::select
+    slots: 40
+    reqWorld: 1..
+    charEvents: {reqCharFlags: +cultist}
+    select: evt-quest-sacrifice-goat
+  }
+  {
+    id: evt-quest-sacrifice-goat
+    npc: pl-cultist
+    npcEvents: {
+      text: txt-evt-quest-sacrifice-goat
+      actions: [
+        {
+          actionText: txt-evt-harbor-quest-missionary-action
+          setPartyStatus: +sacrifice-goat
+          text: txt-evt-quest-sacrifice-goat-accept
+          select: evt-harbor-eventSelection
+        }
+        {
+          actionText: txt-evt-angry-demandPayment-action-1
+          text: txt-evt-quest-sacrifice-goat-refuse
+          select: evt-harbor-eventSelection
+        }
+      ]
+    }
+  }
+  
+  # When accepted add the quest status to the party.
+  {
+    id: st-sacrifice-goat
+    debugCategory: Quest
+    title: txt-st-sacrifice-goat-title
+    description: txt-st-sacrifice-goat
+    sprite: st_cthulhu
+    important: true
+  }
+  
+  # Make sure there's an altar on the map.
+  {
+    targetId: +evt-world-initQuests::partyEvents
+    optional: true
+    reqPartyStatus: +sacrifice-goat
+    addLocation: {ref: loc-altar, range: world}
+    posTile: {locationFlags: +altar}
+    setLocationFlags: +questGoat
+  }
+  
+  # Check the quest status and reward the party for success.
+  {
+    targetId: +evt-harbor-quest-completedCheck::select
+    reqPartyStatus: +sacrifice-goat
+    select: evt-quest-sacrifice-goat-complete
+  }
+  {
+    id: evt-quest-sacrifice-goat-complete
+    setPartyStatus: -sacrifice-goat
+    npc: npc-cultist
+    select: [
+      {
+        reqPartyFlags: +sacrificed-goat
+        setPartyFlags: -sacrificed-goat
+        text: txt-evt-quest-sacrifice-goat-success
+        incAchievement: ach-complete-quests
+        actions: evt-harbor-quest-reward
+      }
+      {
+        reqPartyFlags: -sacrificed-goat
+        text: txt-evt-quest-sacrifice-goat-failure
+        fame: -fameLarge
+        actions: evt-harbor-eventSelection
+      }
+    ]
+  }
+]

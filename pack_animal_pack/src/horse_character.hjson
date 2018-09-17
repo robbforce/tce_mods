@@ -1,0 +1,49 @@
+[
+  {
+    id: anm-horse
+    title: txt-anm-horse-title
+    description: txt-anm-horse
+    health: 8
+    capacity: 3
+    flags: +animal +packAnimal +mammal
+    debugCategory: Pack Animal
+    variations: [
+      {
+        gender: male
+        name: animalMale
+        sprite: sprite_horse_01
+        portrait: face_horse_01
+        miniSprite: minisprite_horse_01
+      }
+      {
+        gender: female
+        name: animalFemale
+        sprite: sprite_horse_02
+        portrait: face_horse_02
+        miniSprite: minisprite_horse_02
+      }
+      {
+        gender: female
+        name: animalFemale
+        sprite: sprite_horse_03
+        portrait: face_horse_03
+        miniSprite: minisprite_horse_03
+      }
+    ]
+    extraSprites: 
+    {
+      crates: crates_horse
+      saddle: saddle_horse
+    }
+    isMountable: true
+    mountedStatuses: st-mount-3
+    bonus: {capacity: -2, reqMounted: true}
+    mountedDice: dc-donkey-1!5
+    levels: [
+      {}
+      {dice: dc-donkey-1!4}
+      {dice: dc-donkey-1!5, mountedDice: dc-donkey-1!5}
+      {dice: dc-donkey-1!6, mountedDice: dc-donkey-1!6}
+    ]
+  }
+]

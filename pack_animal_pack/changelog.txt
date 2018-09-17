@@ -1,0 +1,24 @@
+
+Pack Animal Pack
+
+TODOs:
+- Look into adding a location check for altars and only add one if needed.
+- Consider adding a curse for failure on the cthulhu quest.
+- Look into using milk for desert movement.
+- Mutations from the goat quest will need further play testing as they may be underpowered considering their
+    rarity, the potential difficulty of the quest, and due to gaining an ailment with them.
+- Think about more combo variety for the new mutation dice since these are character attacks:
+    tentacle + awareness = tentacle parry?
+    vclaw_1 + magic = antidote?
+    vclaw_2 + awareness + sword = disembowel?
+    shell + agility = deflect?
+    shell + stability + shield = dermal fortress?
+    ram + agility = charge?
+    ram + agility + awareness = resounding charge?
+    mhorns + stability + sword = impale?
+- Add a check to milk production to prevent the party from becoming overburdened. Do not milk automatically.
+- Add horse chat at celebration.
+
+v0.01 - Initial build - 2018-09-07
+-------------------------------------------------------------------------------------------------------------
+- Combined the goat and horse mods into an organized single large mod, using corrupted lands as an example.

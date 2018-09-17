@@ -1,0 +1,60 @@
+[
+	# Horse character sprites.
+  {
+    id: sprite_horse_01
+    file: pack_animal_pack/img/sprite_horse_01.png
+  }
+  {
+    id: face_horse_01
+    file: pack_animal_pack/img/face_horse_01.png
+  }
+  {
+    id: face_horse_01_small
+    file: pack_animal_pack/img/face_horse_01_small.png
+  }
+  {
+    id: minisprite_horse_01
+    file: pack_animal_pack/img/minisprite_horse_01.png
+  }
+  {
+    id: sprite_horse_02
+    file: pack_animal_pack/img/sprite_horse_02.png
+  }
+  {
+    id: face_horse_02
+    file: pack_animal_pack/img/face_horse_02.png
+  }
+  {
+    id: face_horse_02_small
+    file: pack_animal_pack/img/face_horse_02_small.png
+  }
+  {
+    id: minisprite_horse_02
+    file: pack_animal_pack/img/minisprite_horse_02.png
+  }
+  {
+    id: sprite_horse_03
+    file: pack_animal_pack/img/sprite_horse_03.png
+  }
+  {
+    id: face_horse_03
+    file: pack_animal_pack/img/face_horse_03.png
+  }
+  {
+    id: face_horse_03_small
+    file: pack_animal_pack/img/face_horse_03_small.png
+  }
+  {
+    id: minisprite_horse_03
+    file: pack_animal_pack/img/minisprite_horse_03.png
+  }
+  {
+    id: crates_horse
+    file: pack_animal_pack/img/crates_horse.png
+  }
+  {
+    id: saddle_horse
+    type: slotted
+    file: pack_animal_pack/img/saddle_horse.png
+  }
+]
