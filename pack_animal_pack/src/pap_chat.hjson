@@ -2,6 +2,11 @@
   # Add some new exclamations for the pack animals, during the celebration.
   {
     targetId: +cl-celebration-audience::lines
+    charEvents: {reqCharFlags: +horse}
+    text: txt-cl-celebration-audience-horse
+  }
+  {
+    targetId: +cl-celebration-audience::lines
     charEvents: {reqCharFlags: +goat}
     text: txt-cl-celebration-audience-goat
   }

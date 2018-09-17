@@ -17,7 +17,6 @@ TODOs:
     ram + agility + awareness = resounding charge?
     mhorns + stability + sword = impale?
 - Add a check to milk production to prevent the party from becoming overburdened. Do not milk automatically.
-- Add horse chat at celebration.
 
 v0.01 - Initial build - 2018-09-07
 -------------------------------------------------------------------------------------------------------------
