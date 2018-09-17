@@ -1,0 +1,359 @@
+[
+  # If the player accepted the goat sacrifice quest then ensure the village has an outfitter
+  # which will provide a goat for trade and make the quest achievable.
+  {
+    targetId: +evt-village-enter-selectEvent::select
+    prio: 1
+    reqWorld: 1..
+    reqPartyStatus: +sacrifice-goat
+    select: evt-village-enter-outfitter
+  }
+
+  # Otherwise there's a chance a village will have an outfitter.
+  {
+    targetId: +evt-village-enter-selectEvent::select
+    prio: 3
+    reqWorld: 1..
+    reqLocationFlags: -outfitter
+    reqStanding: -3..
+    select: evt-village-enter-outfitter
+  }
+  {
+    id: evt-village-enter-outfitter
+    setLocationFlags: +outfitter
+    text: txt-evt-village-enter-outfitter
+    actions: evt-village-enterCheck
+  }
+  
+  # No way to slide in a new entry between existing entries so replace the entire list.
+  # This makes the mod not very compatible unfortunately.
+  {
+    targetId: /evt-village-actions::select
+    select: [
+      {
+        actions: [
+          evt-village-familyAmulet
+          evt-village-quest-letter
+          evt-village-rest
+          evt-village-recruit
+          evt-village-trade
+          evt-village-outfitter
+          evt-village-beastMaster
+          evt-village-leave
+        ]
+      }
+    ]
+  }
+  
+  # The new village outfitter.
+  {
+    id: evt-village-outfitter
+    reqLocationFlags: +outfitter
+    actionText: txt-evt-village-outfitter-action
+    text: txt-evt-village-outfitter
+    showPartyCount: true
+    #chat: cl-outfitter-recruit
+    select: evt-village-outfitter-actions
+  }
+  {
+    id: evt-village-outfitter-actions
+    partyEvents: [
+      {
+        optional: true
+        reqLocationFlags: -packSet
+        setLocationFlags: +packSet
+        select: [
+          {slots: 3, setLocationFlags: +packNormal}
+          {slots: 1, setLocationFlags: +packExotic}
+        ]
+      }
+      {
+        # The outfitter will have 1 to 4 animals.
+        optional: true
+        reqLocationFlags: -packCountSet
+        setLocationFlags: +packCountSet
+        select: [
+          {slots: 2, setLocationFlags: +packCount1}
+          {slots: 3, setLocationFlags: +packCount1 +packCount2}
+          {slots: 4, setLocationFlags: +packCount1 +packCount2 +packCount3}
+          {slots: 1, setLocationFlags: +packCount1 +packCount2 +packCount3 +packCount4}
+        ]
+      }
+      {
+        # If the party is on the goat sacrifice quest then animal 1 will always be a goat.
+        optional: true
+        reqPartyStatus: +sacrifice-goat
+        reqLocationFlags: -packCount1Set
+        setLocationFlags: +outfitterGoat1 +packCount1Set
+      }
+      # Randomly select the available pack animals.
+      {
+        optional: true
+        reqLocationFlags: +packCount1 -packCount1Set
+        setLocationFlags: +packCount1Set
+        select: [
+          {slots: 1, setLocationFlags: +outfitterGoat1}
+          {slots: 1, setLocationFlags: +outfitterDonkey1}
+          {slots: 1, setLocationFlags: +outfitterHorse1}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +packCount2 -packCount2Set
+        setLocationFlags: +packCount2Set
+        select: [
+          {slots: 1, setLocationFlags: +outfitterGoat2}
+          {slots: 1, setLocationFlags: +outfitterDonkey2}
+          {slots: 1, setLocationFlags: +outfitterHorse2}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +packCount3 -packCount3Set
+        setLocationFlags: +packCount3Set
+        select: [
+          {slots: 1, setLocationFlags: +outfitterGoat3}
+          {slots: 1, setLocationFlags: +outfitterDonkey3}
+          {slots: 1, setLocationFlags: +outfitterHorse3}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +packCount4 -packCount4Set
+        setLocationFlags: +packCount4Set
+        select: [
+          {slots: 1, setLocationFlags: +outfitterGoat4}
+          {slots: 1, setLocationFlags: +outfitterDonkey4}
+          {slots: 1, setLocationFlags: +outfitterHorse4}
+        ]
+      }
+      {
+        ref: evt-outfitter-recruit
+      }
+      #{
+      #  reqLocationFlags: +beastSpecial_1
+      #  optional: true
+      #  select: [
+      #    {reqBiomeFlags: -arctic, select: evt-village-beastMaster-recruit-tiger-white}
+      #    {
+      #      reqBiomeFlags: +arctic
+      #      select: evt-village-beastMaster-recruit-sabertooth-white
+      #    }
+      #  ]
+      #}
+    ]
+    actions: [
+      evt-outfitter-barter
+      evt-village-main-update
+    ]
+  }
+  
+  # The outfitter should have locally-sourced sanity items and tools available for trade.
+  {
+    id: il-trade-outfitter
+    items: [
+      {slots: 2, it-machete: 20}
+      {slots: 2, it-rope: 20}
+      {slots: 2, it-shovel: 5}
+      {slots: 2, it-torch: 10}
+      {slots: 2, it-meat-animal-cooked-perfect: 10}
+      {slots: 2, it-goat-cheese-perfect: 5}
+      {slots: 1, it-elephantTusk: 3}
+      {slots: 1, it-firstAid: 10}
+      {slots: 1, it-crystalBall: 1}
+      {slots: 1, it-pendulum-treasure: 1}
+      {slots: 1, it-pendulum-blessing: 1}
+      {slots: 1, it-pendulum-shrine: 1}
+    ]
+  }
+  {
+    id: evt-outfitter-barter
+    actionText: txt-evt-outfitter-barter-action
+    select: [
+      {
+        slots: 4
+        text: txt-evt-outfitter-barter
+        barter: {
+          items: {il-trade-outfitter: 6, il-trade-shamanHut: 2, it-water: 20, il-metaItems: 99}
+          closeEvents: evt-village-outfitter-actions
+          cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
+        }
+      }
+      {
+        slots: 1
+        text: txt-evt-outfitter-barter-special
+        barter: {
+          items: {il-trade-outfitter: 6, il-trade-trader-weapons: 2, il-trade-shamanHut: 3, it-water: 20, il-metaItems: 99}
+          closeEvents: evt-village-outfitter-actions
+          cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
+        }
+      }
+    ]
+  }
+  
+  # This recruit event will set up the recruit actions based on the available animals.
+  {
+    id: evt-outfitter-recruit
+    partyEvents: [
+      {optional: true, reqLocationFlags: +outfitterGoat1, select: evt-outfitter-recruit-goat}
+      {optional: true, reqLocationFlags: +outfitterGoat2, select: evt-outfitter-recruit-goat}
+      {optional: true, reqLocationFlags: +outfitterGoat3, select: evt-outfitter-recruit-goat}
+      {optional: true, reqLocationFlags: +outfitterGoat4, select: evt-outfitter-recruit-goat}
+      {optional: true, reqLocationFlags: +outfitterDonkey1, select: evt-outfitter-recruit-donkey}
+      {optional: true, reqLocationFlags: +outfitterDonkey2, select: evt-outfitter-recruit-donkey}
+      {optional: true, reqLocationFlags: +outfitterDonkey3, select: evt-outfitter-recruit-donkey}
+      {optional: true, reqLocationFlags: +outfitterDonkey4, select: evt-outfitter-recruit-donkey}
+      {optional: true, reqLocationFlags: +outfitterHorse1, select: evt-outfitter-recruit-horse}
+      {optional: true, reqLocationFlags: +outfitterHorse2, select: evt-outfitter-recruit-horse}
+      {optional: true, reqLocationFlags: +outfitterHorse3, select: evt-outfitter-recruit-horse}
+      {optional: true, reqLocationFlags: +outfitterHorse4, select: evt-outfitter-recruit-horse}
+    ]
+  }
+
+  # Buy a goat.
+  {
+    id: evt-outfitter-recruit-goat
+    actions: [
+      {
+        actionText: txt-evt-outfitter-recruit-goat-action
+        select: [
+          {
+            barter: {
+              baseValue: 20
+              closeEvents: {
+                text: txt-evt-outfitter-recruit
+                addCharacter: anm-goat-female
+                setPartyFlags: +recruitedSomebody
+                partyEvents: evt-outfitter-recruited-goat
+                select: evt-village-outfitter-actions
+              }
+              cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
+            }
+          }
+          {
+            barter: {
+              baseValue: 20
+              closeEvents: {
+                text: txt-evt-outfitter-recruit
+                addCharacter: anm-goat-male
+                setPartyFlags: +recruitedSomebody
+                partyEvents: evt-outfitter-recruited-goat
+                select: evt-village-outfitter-actions
+              }
+              cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
+            }
+          }
+        ]
+      }
+    ]
+  }
+  # Set flags to remove the goat from the action list and for customizing the outfitter description.
+  {
+    id: evt-outfitter-recruited-goat
+    select: [
+      {prio: 1, reqLocationFlags: +outfitterGoat1, setLocationFlags: -outfitterGoat1 +recruited1}
+      {prio: 2, reqLocationFlags: +outfitterGoat2, setLocationFlags: -outfitterGoat2 +recruited2}
+      {prio: 3, reqLocationFlags: +outfitterGoat3, setLocationFlags: -outfitterGoat3 +recruited3}
+      {prio: 4, reqLocationFlags: +outfitterGoat4, setLocationFlags: -outfitterGoat4 +recruited4}
+    ]
+  }
+  
+  # Buy a donkey.
+  {
+    id: evt-outfitter-recruit-donkey
+    actions: [
+      {
+        actionText: txt-evt-outfitter-recruit-donkey-action
+        barter: {
+          baseValue: 30
+          closeEvents: {
+            text: txt-evt-outfitter-recruit
+            addCharacter: anm-donkey
+            partyEvents: evt-outfitter-recruited-donkey
+            setPartyFlags: +recruitedSomebody
+            select: evt-village-outfitter-actions
+          }
+          cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
+        }
+      }
+    ]
+  }
+  # Set flags to remove the donkey from the action list and for customizing the outfitter description.
+  {
+    id: evt-outfitter-recruited-donkey
+    select: [
+      {prio: 1, reqLocationFlags: +outfitterDonkey1, setLocationFlags: -outfitterDonkey1 +recruited1}
+      {prio: 2, reqLocationFlags: +outfitterDonkey2, setLocationFlags: -outfitterDonkey2 +recruited2}
+      {prio: 3, reqLocationFlags: +outfitterDonkey3, setLocationFlags: -outfitterDonkey3 +recruited3}
+      {prio: 4, reqLocationFlags: +outfitterDonkey4, setLocationFlags: -outfitterDonkey4 +recruited4}
+    ]
+  }
+
+  # Buy a horse.
+  {
+    id: evt-outfitter-recruit-horse
+    actions: [
+      {
+        actionText: txt-evt-outfitter-recruit-horse-action
+        barter: {
+          baseValue: 40
+          closeEvents: {
+            text: txt-evt-outfitter-recruit
+            addCharacter: anm-horse
+            partyEvents: evt-outfitter-recruited-horse
+            setPartyFlags: +recruitedSomebody
+            select: evt-village-outfitter-actions
+          }
+          cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
+        }
+      }
+    ]
+  }
+  # Set flags to remove the horse from the action list and for customizing the outfitter description.
+  {
+    id: evt-outfitter-recruited-horse
+    select: [
+      {prio: 1, reqLocationFlags: +outfitterHorse1, setLocationFlags: -outfitterHorse1 +recruited1}
+      {prio: 2, reqLocationFlags: +outfitterHorse2, setLocationFlags: -outfitterHorse2 +recruited2}
+      {prio: 3, reqLocationFlags: +outfitterHorse3, setLocationFlags: -outfitterHorse3 +recruited3}
+      {prio: 4, reqLocationFlags: +outfitterHorse4, setLocationFlags: -outfitterHorse4 +recruited4}
+    ]
+  }
+
+  {
+    id: evt-outfitter-recruit-water-buffalo
+    actions: [
+      {
+        actionText: txt-evt-outfitter-recruit-water-buffalo-action
+        barter: {
+          baseValue: 50
+          closeEvents: {
+            text: txt-evt-outfitter-recruit
+            addCharacter: anm-water-buffalo
+            #setPartyFlags: +recruitedSomebody
+            select: evt-village-outfitter-actions
+          }
+          cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
+        }
+      }
+    ]
+  }
+  {
+    id: evt-outfitter-recruit-yak
+    #actions: [
+    #  {
+    #    actionText: txt-evt-outfitter-recruit-yak-action
+    #    barter: {
+    #      baseValue: 75
+    #      closeEvents: {
+    #        text: txt-evt-outfitter-recruit
+    #        addCharacter: anm-yak
+    #        setPartyFlags: +recruitedSomebody
+    #      }
+    #      cancelEvents: {text: txt-evt-outfitter-barter-cancel}
+    #    }
+        select: evt-village-outfitter-actions
+    #  }
+    #]
+  }
+]

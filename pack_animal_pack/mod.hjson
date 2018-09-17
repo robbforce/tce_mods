@@ -61,5 +61,10 @@
     {
 			import: pack_animal_pack/src/pap_chat.hjson
 		}
+    
+    # Add a special trader to native villages that can help make the goat quest attainable.
+    {
+      import: pack_animal_pack/src/pap_outfitter.hjson
+    }
 	]
 }

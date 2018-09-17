@@ -8,15 +8,19 @@ TODOs:
 - Mutations from the goat quest will need further play testing as they may be underpowered considering their
     rarity, the potential difficulty of the quest, and due to gaining an ailment with them.
 - Think about more combo variety for the new mutation dice since these are character attacks:
-    tentacle + awareness = tentacle parry?
-    vclaw_1 + magic = antidote?
-    vclaw_2 + awareness + sword = disembowel?
-    shell + agility = deflect?
-    shell + stability + shield = dermal fortress?
+    tentacle + awareness = parry / disable? - shield and can stun weapon dice?
+    vclaw_1 + magic = antidote? - small heal, removes poison
+    vclaw_2 + awareness + sword = disembowel? - causes bleeding
+    shell + agility = deflect? - strong shield
+    shell + stability + shield = dermal fortress? - super strong shield
     ram + agility = charge?
-    ram + agility + awareness = resounding charge?
-    mhorns + stability + sword = impale?
+    ram + agility + awareness = resounding charge? stampede - group stun?
+    mhorns + stability + sword = impale? - causes massive bleeding
 - Add a check to milk production to prevent the party from becoming overburdened. Do not milk automatically.
+- Add some method of customizing the outfitter description text based on the number of animals hired. If all
+    have been hired then the description should include an empty pen.
+- Build in allowing the player to know whether they are purchasing a male or female pack animal at the outfitter.
+- Make animal selection at outfitter based on the biome.
 
 v0.01 - Initial build - 2018-09-07
 -------------------------------------------------------------------------------------------------------------
