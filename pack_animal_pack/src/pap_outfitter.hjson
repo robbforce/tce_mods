@@ -172,7 +172,6 @@
     select: [
       {
         slots: 4
-        text: txt-evt-outfitter-barter
         barter: {
           items: {il-trade-outfitter: 6, il-trade-shamanHut: 2, it-water: 20, il-metaItems: 99}
           closeEvents: evt-village-outfitter-actions
@@ -181,7 +180,6 @@
       }
       {
         slots: 1
-        text: txt-evt-outfitter-barter-special
         barter: {
           items: {il-trade-outfitter: 6, il-trade-trader-weapons: 2, il-trade-shamanHut: 3, it-water: 20, il-metaItems: 99}
           closeEvents: evt-village-outfitter-actions
@@ -213,37 +211,48 @@
   # Buy a goat.
   {
     id: evt-outfitter-recruit-goat
-    actions: [
+    select: [
       {
-        actionText: txt-evt-outfitter-recruit-goat-action
-        select: [
-          {
-            barter: {
-              baseValue: 20
-              closeEvents: {
-                text: txt-evt-outfitter-recruit
-                addCharacter: anm-goat-female
-                setPartyFlags: +recruitedSomebody
-                partyEvents: evt-outfitter-recruited-goat
-                select: evt-village-outfitter-actions
+        npc: anm-goat-female
+        npcEvents: {
+          actions: [
+            {
+              actionText: txt-evt-outfitter-recruit-action
+              barter: {
+                baseValue: 20
+                closeEvents: {
+                  text: txt-evt-outfitter-recruit
+                  addNPC: true
+                  partyEvents: evt-outfitter-recruited-goat
+                  setPartyFlags: +recruitedSomebody
+                  select: evt-village-outfitter-actions
+                }
+                cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
               }
-              cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
             }
-          }
-          {
-            barter: {
-              baseValue: 20
-              closeEvents: {
-                text: txt-evt-outfitter-recruit
-                addCharacter: anm-goat-male
-                setPartyFlags: +recruitedSomebody
-                partyEvents: evt-outfitter-recruited-goat
-                select: evt-village-outfitter-actions
+          ]
+        }
+      }
+      {
+        npc: anm-goat-male
+        npcEvents: {
+          actions: [
+            {
+              actionText: txt-evt-outfitter-recruit-action
+              barter: {
+                baseValue: 20
+                closeEvents: {
+                  text: txt-evt-outfitter-recruit
+                  addNPC: true
+                  partyEvents: evt-outfitter-recruited-goat
+                  setPartyFlags: +recruitedSomebody
+                  select: evt-village-outfitter-actions
+                }
+                cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
               }
-              cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
             }
-          }
-        ]
+          ]
+        }
       }
     ]
   }
@@ -261,22 +270,25 @@
   # Buy a donkey.
   {
     id: evt-outfitter-recruit-donkey
-    actions: [
-      {
-        actionText: txt-evt-outfitter-recruit-donkey-action
-        barter: {
-          baseValue: 30
-          closeEvents: {
-            text: txt-evt-outfitter-recruit
-            addCharacter: anm-donkey
-            partyEvents: evt-outfitter-recruited-donkey
-            setPartyFlags: +recruitedSomebody
-            select: evt-village-outfitter-actions
+    npc: anm-donkey
+    npcEvents: {
+      actions: [
+        {
+          actionText: txt-evt-outfitter-recruit-action
+          barter: {
+            baseValue: 30
+            closeEvents: {
+              text: txt-evt-outfitter-recruit
+              addNPC: true
+              partyEvents: evt-outfitter-recruited-donkey
+              setPartyFlags: +recruitedSomebody
+              select: evt-village-outfitter-actions
+            }
+            cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
           }
-          cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
         }
-      }
-    ]
+      ]
+    }
   }
   # Set flags to remove the donkey from the action list and for customizing the outfitter description.
   {
@@ -292,22 +304,25 @@
   # Buy a horse.
   {
     id: evt-outfitter-recruit-horse
-    actions: [
-      {
-        actionText: txt-evt-outfitter-recruit-horse-action
-        barter: {
-          baseValue: 40
-          closeEvents: {
-            text: txt-evt-outfitter-recruit
-            addCharacter: anm-horse
-            partyEvents: evt-outfitter-recruited-horse
-            setPartyFlags: +recruitedSomebody
-            select: evt-village-outfitter-actions
+    npc: anm-horse
+    npcEvents: {
+      actions: [
+        {
+          actionText: txt-evt-outfitter-recruit-action
+          barter: {
+            baseValue: 40
+            closeEvents: {
+              text: txt-evt-outfitter-recruit
+              addNPC: true
+              partyEvents: evt-outfitter-recruited-horse
+              setPartyFlags: +recruitedSomebody
+              select: evt-village-outfitter-actions
+            }
+            cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
           }
-          cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
         }
-      }
-    ]
+      ]
+    }
   }
   # Set flags to remove the horse from the action list and for customizing the outfitter description.
   {
@@ -324,7 +339,7 @@
     id: evt-outfitter-recruit-water-buffalo
     actions: [
       {
-        actionText: txt-evt-outfitter-recruit-water-buffalo-action
+        actionText: txt-evt-outfitter-recruit-action
         barter: {
           baseValue: 50
           closeEvents: {
@@ -342,7 +357,7 @@
     id: evt-outfitter-recruit-yak
     #actions: [
     #  {
-    #    actionText: txt-evt-outfitter-recruit-yak-action
+    #    actionText: txt-evt-outfitter-recruit-action
     #    barter: {
     #      baseValue: 75
     #      closeEvents: {
