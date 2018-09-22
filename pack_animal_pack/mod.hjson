@@ -4,7 +4,7 @@
 		id: pack_animal_pack
 		name: Pack animal pack
 		authors: fubarbarian
-		version: "0.0.1.0"
+		version: "0.0.2.0"
 		preview: preview_pap
     twitter: n/a
     weblink: n/a
@@ -22,6 +22,9 @@
 		}
 		{
 			import: pack_animal_pack/img/image_goat.hjson
+		}
+		{
+			import: pack_animal_pack/img/image_pap.hjson
 		}
 	],
 	configSettings:{

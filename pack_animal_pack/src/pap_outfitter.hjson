@@ -1,4 +1,41 @@
 [
+  # Add the outfitter as a sublocation to native villages so it will spawn with them.
+  {
+    targetId: /loc-village-1::subLocations
+    data: [
+      {
+        ref: loc-subLocation-village-1 loc-subLocation-village-2
+        offsets: 4n 4sw 4se
+        chance: 0.75
+      }
+      {
+        reqPartyStatus: +sacrifice-goat
+        ref: loc-village-outfitter
+        offsets: 1nw
+      }
+    ]
+  }
+  
+  # The new outfitter location allows us to create an outfitter inventory distinct from
+  # the village trade inventory.
+  {
+    id: loc-village-outfitter
+    debugCategory: subLocations
+    debugColor: blue
+    showHint: false
+    hideParty: false
+    sprite: [
+      {ref: fxt_outfitter_01, reqBiomeFlags: -arctic}
+      {ref: res_fxt_sub_fire_3.png, reqBiomeFlags: +arctic}
+    ]
+    setTile: [
+      {ref: tl-dry, reqBiomeFlags: +dry | +desert}
+      {ref: tl-deepSnow, reqBiomeFlags: +arctic}
+      {ref: tl-grass, reqBiomeFlags: +grass | +prehistoric}
+    ]
+    spawnEvents: {setLocationFlags: +villageOutfitter}
+  }
+  
   # If the player accepted the goat sacrifice quest then ensure the village has an outfitter
   # which will provide a goat for trade and make the quest achievable.
   {
@@ -29,7 +66,7 @@
   # This makes the mod not very compatible unfortunately.
   {
     targetId: /evt-village-actions::select
-    select: [
+    data: [
       {
         actions: [
           evt-village-familyAmulet
@@ -45,11 +82,15 @@
     ]
   }
   
-  # The new village outfitter.
+  # Vistit the village outfitter. Teleport the party to the sublocation
+  # so we can provide a distinct location inventory.
   {
     id: evt-village-outfitter
     reqLocationFlags: +outfitter
     actionText: txt-evt-village-outfitter-action
+    posTile: {range: ..1, locationFlags: +villageOutfitter}
+    teleport: true
+    npc: npc-trader
     text: txt-evt-village-outfitter
     showPartyCount: true
     #chat: cl-outfitter-recruit
@@ -144,7 +185,7 @@
     ]
     actions: [
       evt-outfitter-barter
-      evt-village-main-update
+      evt-outfitter-leave
     ]
   }
   
@@ -370,5 +411,14 @@
         select: evt-village-outfitter-actions
     #  }
     #]
+  }
+  
+  # When leaving, teleport the party back to the village before pulling up the village actions.
+  {
+    id: evt-outfitter-leave
+    actionText: txt-evt-village-main-update-action
+    posTile: {range: ..1, locationFlags: +village}
+    teleport: true
+    select: evt-village-main-update
   }
 ]

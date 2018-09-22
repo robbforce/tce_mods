@@ -1,0 +1,7 @@
+[
+	# Outfitter location sprites.
+  {
+    id: fxt_outfitter_01
+    file: pack_animal_pack/img/fxt_outfitter_01.png
+  }
+]
