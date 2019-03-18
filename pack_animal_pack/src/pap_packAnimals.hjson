@@ -1,0 +1,173 @@
+[
+  # Modify the existing buffalo to specify it as male.
+  {
+    targetId: /anm-waterBuffalo::variations
+    data: [
+      {
+        gender: male
+        name: animalMale
+        sprite: res_anm_buffalo_1.png
+        portrait: res_face_buffalo_1.png
+      }
+      {
+        gender: male
+        name: animalMale
+        sprite: res_anm_buffalo_2.png
+        portrait: res_face_buffalo_1.png
+      }
+    ]
+  }
+
+  # Modify the existing camel to specify it as a male dromedary camel.
+  {
+    targetId: /anm-camel::title
+    data: txt-anm-dromedaryCamel-title
+  }
+  {
+    targetId: /anm-camel::description
+    data: txt-anm-dromedaryCamel
+  }
+  {
+    targetId: *anm-camel::flags
+    data: +dromedaryCamel
+  }
+  {
+    targetId: /anm-camel::variations
+    data: [
+      {
+        gender: male
+        name: animalMale
+        sprite: res_anm_camel_1.png
+        portrait: res_face_camel_1.png
+      }
+      {
+        gender: male
+        name: animalMale
+        sprite: res_anm_camel_2.png
+        portrait: res_face_camel_1.png
+      }
+    ]
+  }
+
+  # Stripped down versions of the remaining base game pack animals, for event spawning.
+  {
+    id: anm-donkey-lite
+    title: txt-anm-donkey-title
+    debugCategory: etc
+    imgSlot: custom2
+    variations: [
+      {
+        gender: male
+        name: animalMale
+        sprite: res_anm_donkey_1.png
+        portrait: res_face_donkey_1.png
+      }
+      {
+        gender: female
+        name: animalFemale
+        sprite: res_anm_donkey_2.png
+        portrait: res_face_donkey_2.png
+      }
+      {
+        gender: male
+        name: animalMale
+        sprite: res_anm_donkey_3.png
+        portrait: res_face_donkey_3.png
+      }
+    ]
+  }
+
+  {
+    id: anm-dog-husky-lite
+    extends: anm-dog-hunting
+    title: txt-anm-dog-husky-title
+    debugCategory: etc
+    imgSlot: custom2
+    variations: [
+      {
+        gender: male
+        name: animalDogMale
+        sprite: res_anm_husky_1.png
+        portrait: res_face_husky_1.png
+      }
+      {
+        gender: male
+        name: animalDogMale
+        sprite: res_anm_husky_2.png
+        portrait: res_face_husky_2.png
+      }
+      {
+        gender: male
+        name: animalDogMale
+        sprite: res_anm_husky_3.png
+        portrait: res_face_husky_3.png
+      }
+      {
+        gender: male
+        name: animalDogMale
+        sprite: res_anm_husky_4.png
+        portrait: res_face_husky_4.png
+      }
+      {
+        gender: female
+        name: animalDogFemale
+        sprite: res_anm_husky_1.png
+        portrait: res_face_husky_1.png
+      }
+      {
+        gender: female
+        name: animalDogFemale
+        sprite: res_anm_husky_2.png
+        portrait: res_face_husky_2.png
+      }
+      {
+        gender: female
+        name: animalDogFemale
+        sprite: res_anm_husky_3.png
+        portrait: res_face_husky_3.png
+      }
+      {
+        gender: female
+        name: animalDogFemale
+        sprite: res_anm_husky_4.png
+        portrait: res_face_husky_4.png
+      }
+    ]
+  }
+
+  {
+    id: anm-parasaurolophus-lite
+    title: txt-anm-parasaurolophus-title
+    debugCategory: etc
+    imgSlot: custom2
+    variations: [
+      {
+        gender: male
+        name: animalMale
+        sprite: res_anm_parasaurolophus_1.png
+        portrait: res_face_parasaurolophus_1.png
+      }
+    ]
+  }
+
+  {
+    id: anm-chasmosaurus-lite
+    title: txt-anm-chasmosaurus-title
+    debugCategory: etc
+    imgSlot: custom2
+    variations: [
+      {
+        gender: male
+        name: animalMale
+        sprite: res_anm_chasmosaurus_1.png
+        portrait: res_face_chasmosaurus_1.png
+      }
+      {
+        gender: female
+        name: animalFemale
+        sprite: res_anm_chasmosaurus_1.png
+        portrait: res_face_chasmosaurus_1.png
+      }
+    ]
+  }
+]

@@ -1,0 +1,208 @@
+[
+  # Doesn't seem possible to apply specific levels to variations, so female camels
+  # were split off from males in order to give them milk production.
+  {
+    id: anm-bactrianCamel-female
+    title: txt-anm-bactrianCamel-title
+    description: txt-anm-bactrianCamel
+    debugCategory: Pack Animal
+    variations: [
+      {
+        gender: female
+        name: animalFemale
+        sprite: sprite_bactrian_camel_01
+        portrait: face_bactrian_camel_01
+        miniSprite: minisprite_bactrian_camel_01
+      }
+      {
+        gender: female
+        name: animalFemale
+        sprite: sprite_bactrian_camel_02
+        portrait: face_bactrian_camel_02
+        miniSprite: minisprite_bactrian_camel_02
+      }
+    ]
+    extraSprites: { crates: crates_bactrian_camel, saddle: saddle_bactrian_camel }
+    flags: +animal +packAnimal +bactrianCamel +camel +mammal
+    health: 7
+    isMountable: true
+    mountedDice: dc-camel-1!4
+    mountedStatuses: st-mount-2
+    capacity: 4
+    bonus: [
+      { capacity: -2, reqMounted: true }
+    ]
+    levels: [
+      { statuses: st-produce-milk-3day }
+      { dice: dc-camel-1!3 }
+      { dice: dc-camel-1!4 }
+      { dice: dc-camel-1!5 }
+    ]
+  }
+
+  {
+    id: anm-bactrianCamel-male
+    title: txt-anm-bactrianCamel-title
+    description: txt-anm-bactrianCamel
+    debugCategory: Pack Animal
+    variations: [
+      {
+        gender: male
+        name: animalMale
+        sprite: sprite_bactrian_camel_01
+        portrait: face_bactrian_camel_01
+        miniSprite: minisprite_bactrian_camel_01
+      }
+      {
+        gender: male
+        name: animalMale
+        sprite: sprite_bactrian_camel_02
+        portrait: face_bactrian_camel_02
+        miniSprite: minisprite_bactrian_camel_02
+      }
+    ]
+    extraSprites: { crates: crates_bactrian_camel, saddle: saddle_bactrian_camel }
+    flags: +animal +packAnimal +bactrianCamel +camel +mammal
+    health: 7
+    isMountable: true
+    mountedDice: dc-camel-1!4
+    mountedStatuses: st-mount-2
+    capacity: 4
+    bonus: [
+      { capacity: -2, reqMounted: true }
+    ]
+    levels: [
+      { }
+      { dice: dc-camel-1!3 }
+      { dice: dc-camel-1!4 }
+      { dice: dc-camel-1!5 }
+    ]
+  }
+
+  # Doesn't seem possible to apply specific levels to variations, so female camels
+  # were split off from males in order to give them milk production.
+  {
+    id: anm-dromedaryCamel-female
+    title: txt-anm-dromedaryCamel-title
+    description: txt-anm-dromedaryCamel
+    debugCategory: Pack Animal
+    variations: [
+      {
+        gender: female
+        name: animalFemale
+        sprite: res_anm_camel_1.png
+        portrait: res_face_camel_1.png
+      }
+      {
+        gender: female
+        name: animalFemale
+        sprite: res_anm_camel_2.png
+        portrait: res_face_camel_1.png
+      }
+    ]
+    miniSprite: res_anm_camel_mini.png
+    extraSprites: { crates: res_anm_camel_crates.png, saddle: res_anm_camel_saddle.png }
+    flags: +animal +packAnimal +dromedaryCamel +camel +mammal
+    health: 7
+    isMountable: true
+    mountedDice: dc-camel-1!4
+    mountedStatuses: st-mount-2
+    capacity: 4
+    bonus: [
+      { capacity: -2, reqMounted: true }
+    ]
+    levels: [
+      { statuses: st-produce-milk-2day }
+      { dice: dc-camel-1!3 }
+      { dice: dc-camel-1!4 }
+      { dice: dc-camel-1!5 }
+    ]
+  }
+
+  # Lite versions of the camels for event spawning. Features an altered sprite, sitting on the ground.
+  {
+    id: anm-bactrianCamel-lite
+    title: txt-anm-bactrianCamel-title
+    debugCategory: etc
+    imgSlot: custom2
+    variations: [
+      {
+        gender: female
+        name: animalFemale
+        sprite: sprite_bactrian_camel_01_lite
+        portrait: face_bactrian_camel_01
+      }
+      {
+        gender: male
+        name: animalMale
+        sprite: sprite_bactrian_camel_01_lite
+        portrait: face_bactrian_camel_01
+      }
+      {
+        gender: female
+        name: animalFemale
+        sprite: sprite_bactrian_camel_02_lite
+        portrait: face_bactrian_camel_02
+      }
+      {
+        gender: male
+        name: animalMale
+        sprite: sprite_bactrian_camel_02_lite
+        portrait: face_bactrian_camel_02
+      }
+    ]
+    # A little hack so the camel doesn't flip horizontally: add "crates" to the image.
+    # These are the minumum properties needed to get the engine to display the crates.
+    extraSprites: { crates: crates_bactrian_camel_lite, saddle: saddle_bactrian_camel }
+    isMountable: true
+    mountedDice: dc-camel-1!4
+    mountedStatuses: st-mount-2
+    flags: +animal +packAnimal +bactrianCamel +camel +mammal
+    bonus: [
+      { capacity: -2, reqMounted: true }
+    ]
+  }
+
+  {
+    id: anm-dromedaryCamel-lite
+    title: txt-anm-dromedaryCamel-title
+    debugCategory: etc
+    imgSlot: custom2
+    variations: [
+      {
+        gender: male
+        name: animalMale
+        sprite: sprite_dromedary_camel_01_lite
+        portrait: res_face_camel_1.png
+      }
+      {
+        gender: female
+        name: animalFemale
+        sprite: sprite_dromedary_camel_01_lite
+        portrait: res_face_camel_1.png
+      }
+      {
+        gender: male
+        name: animalMale
+        sprite: sprite_dromedary_camel_02_lite
+        portrait: res_face_camel_2.png
+      }
+      {
+        gender: female
+        name: animalFemale
+        sprite: sprite_dromedary_camel_02_lite
+        portrait: res_face_camel_2.png
+      }
+    ]
+    # A little hack so the camel doesn't flip horizontally: add "crates" to the image.
+    # These are the minumum properties needed to get the engine to display the crates.
+    extraSprites: { crates: crates_dromedary_camel_lite, saddle: res_anm_camel_saddle.png }
+    isMountable: true
+    mountedDice: dc-camel-1!4
+    mountedStatuses: st-mount-2
+    flags: +animal +packAnimal +dromedaryCamel +camel +mammal
+    bonus: [
+      { capacity: -2, reqMounted: true }
+    ]
+  }
+]

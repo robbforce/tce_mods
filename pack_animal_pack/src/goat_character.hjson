@@ -3,9 +3,9 @@
   # were split off from males in order to give them milk production.
   {
     id: anm-goat-female
-    debugCategory: Pack Animal
     title: txt-anm-goat-title
     description: txt-anm-goat
+    debugCategory: Pack Animal
     variations: [
       {
         gender: female
@@ -45,9 +45,9 @@
   # production, they've been given an attack at level 1. They can be ornery after all. ;)
   {
     id: anm-goat-male
-    debugCategory: Pack Animal
     title: txt-anm-goat-title
     description: txt-anm-goat
+    debugCategory: Pack Animal
     variations: [
       {
         gender: male
@@ -76,10 +76,10 @@
     flags: +animal +packAnimal +mammal +goat
     isMountable: false
     levels: [
-      {dice: dc-goat-1!3}
-      {dice: dc-goat-1!4}
-      {dice: dc-goat-1!5}
-      {dice: dc-goat-2!6}
+      { dice: dc-goat-1!3 }
+      { dice: dc-goat-1!4 }
+      { dice: dc-goat-1!5 }
+      { dice: dc-goat-2!6 }
     ]
   }
   {
@@ -91,5 +91,51 @@
     id: dc-goat-2
     sprite: hud_dice_bg_animal_2.png
     faces: ram ram ram ram ram horns
+  }
+
+  # A stripped down version of the goat without crates, for event spawning.
+  {
+    id: anm-goat-lite
+    title: txt-anm-goat-title
+    debugCategory: etc
+    imgSlot: custom2
+    variations: [
+      {
+        gender: female
+        name: animalFemale
+        sprite: sprite_goat_01_lite
+        portrait: face_goat_01
+      }
+      {
+        gender: female
+        name: animalFemale
+        sprite: sprite_goat_02_lite
+        portrait: face_goat_02
+      }
+      {
+        gender: female
+        name: animalFemale
+        sprite: sprite_goat_03_lite
+        portrait: face_goat_03
+      }
+      {
+        gender: male
+        name: animalMale
+        sprite: sprite_goat_04_lite
+        portrait: face_goat_04
+      }
+      {
+        gender: male
+        name: animalMale
+        sprite: sprite_goat_05_lite
+        portrait: face_goat_05
+      }
+      {
+        gender: male
+        name: animalMale
+        sprite: sprite_goat_06_lite
+        portrait: face_goat_06
+      }
+    ]
   }
 ]

@@ -46,20 +46,72 @@
     ]
   }
 
-  # Recruit a horse to the party.
+  # Add a recruit event for bactrian camels.
   {
-    id: evt-village-recruit-horse
-    reqLocationFlags: +tribeWarriors | +tribeScouts | +tribeShamans
-    npc: anm-horse
-    npcEvents: {
-      actions: {
-        actionText: txt-anm-horse-title
-        text: txt-evt-village-recruit-animal-generic
-        setPartyFlags: +recruitedSomebody
-        addNPC: true
-        select: evt-village-main-update
+    id: evt-village-recruit-bactrianCamel
+    reqLocationFlags: +tribeNomads
+    select: [
+      {
+        npc: anm-bactrianCamel-female
+        npcEvents: {
+          actions: {
+            actionText: txt-anm-bactrianCamel-title
+            text: txt-evt-village-recruit-animal-generic
+            setPartyFlags: +recruitedSomebody
+            addNPC: true
+            select: evt-village-main-update
+            #showPersonInfo: true
+          }
+        }
       }
-    }
+      {
+        npc: anm-bactrianCamel-male
+        npcEvents: {
+          actions: {
+            actionText: txt-anm-bactrianCamel-title
+            text: txt-evt-village-recruit-animal-generic
+            setPartyFlags: +recruitedSomebody
+            addNPC: true
+            select: evt-village-main-update
+            #showPersonInfo: true
+          }
+        }
+      }
+    ]
+  }
+
+  # Replace the camel recruit event now that we've added modified female dromedary camels.
+  {
+    targetId: /evt-village-recruit-camel
+    reqLocationFlags: +tribeNomads
+    select: [
+      {
+        npc: anm-dromedaryCamel-female
+        npcEvents: {
+          actions: {
+            actionText: txt-anm-dromedaryCamel-title
+            text: txt-evt-village-recruit-animal-generic
+            setPartyFlags: +recruitedSomebody
+            addNPC: true
+            select: evt-village-main-update
+            #showPersonInfo: true
+          }
+        }
+      }
+      {
+        npc: anm-camel
+        npcEvents: {
+          actions: {
+            actionText: txt-anm-dromedaryCamel-title
+            text: txt-evt-village-recruit-animal-generic
+            setPartyFlags: +recruitedSomebody
+            addNPC: true
+            select: evt-village-main-update
+            #showPersonInfo: true
+          }
+        }
+      }
+    ]
   }
 
   # I don't want to increase the odds of getting a goat, so use a single recruit event
@@ -77,6 +129,7 @@
             setPartyFlags: +recruitedSomebody
             addNPC: true
             select: evt-village-main-update
+            #showPersonInfo: true
           }
         }
       }

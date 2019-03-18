@@ -5,6 +5,10 @@
     file: pack_animal_pack/img/sprite_goat_01.png
   }
   {
+    id: sprite_goat_01_lite
+    file: pack_animal_pack/img/sprite_goat_01_lite.png
+  }
+  {
     id: face_goat_01
     file: pack_animal_pack/img/face_goat_01.png
   }
@@ -15,6 +19,10 @@
   {
     id: sprite_goat_02
     file: pack_animal_pack/img/sprite_goat_02.png
+  }
+  {
+    id: sprite_goat_02_lite
+    file: pack_animal_pack/img/sprite_goat_02_lite.png
   }
   {
     id: face_goat_02
@@ -29,6 +37,10 @@
     file: pack_animal_pack/img/sprite_goat_03.png
   }
   {
+    id: sprite_goat_03_lite
+    file: pack_animal_pack/img/sprite_goat_03_lite.png
+  }
+  {
     id: face_goat_03
     file: pack_animal_pack/img/face_goat_03.png
   }
@@ -41,6 +53,10 @@
     file: pack_animal_pack/img/sprite_goat_04.png
   }
   {
+    id: sprite_goat_04_lite
+    file: pack_animal_pack/img/sprite_goat_04_lite.png
+  }
+  {
     id: face_goat_04
     file: pack_animal_pack/img/face_goat_04.png
   }
@@ -49,12 +65,20 @@
     file: pack_animal_pack/img/sprite_goat_05.png
   }
   {
+    id: sprite_goat_05_lite
+    file: pack_animal_pack/img/sprite_goat_05_lite.png
+  }
+  {
     id: face_goat_05
     file: pack_animal_pack/img/face_goat_05.png
   }
   {
     id: sprite_goat_06
     file: pack_animal_pack/img/sprite_goat_06.png
+  }
+  {
+    id: sprite_goat_06_lite
+    file: pack_animal_pack/img/sprite_goat_06_lite.png
   }
   {
     id: face_goat_06

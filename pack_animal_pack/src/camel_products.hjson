@@ -1,0 +1,100 @@
+[
+  # Camel milk provides more nourishment than other milks, but is too difficult to make cheese from, in the field.
+  {
+    id: it-camel-milk
+    name: txt-it-camel-milk-name
+    description: txt-it-camel-milk
+    debugCategory: animal products
+    sprite: camel_milk
+    value: 5
+    maxStack: 10
+    autoRemove: true
+    addStatus: st-spoil-camel-milk
+    useEvents: {
+      sanity: 7
+      playSound: sfx_drink_var1 sfx_drink_var2
+      chat: cl-it-milk
+      removeItem: true
+    }
+  }
+
+  # A little bit of a hack to get the milk to spoil. Items don't get consistent aging statuses with day
+  # events, so this status gets applied to the party when milk is received.
+  {
+    id: st-spoil-camel-milk
+    debugCategory: internal
+    dayEvents: [
+      {
+        prio: 1
+        reqBiomeFlags: -arctic
+        reqAge: 4..
+        # There's a very small chance the milk won't spoil immediately.
+        select: [
+          { slots: 1 }
+          {
+            slots: 9
+            reqItems: { it-camel-milk: 1.. }
+            items: { it-camel-milk: -1 }
+            resetStatusAge: true
+          }
+        ]
+      }
+      {
+        prio: 1
+        # Arctic conditions extend the shelf life significantly.
+        reqBiomeFlags: +arctic
+        reqAge: 12..
+        # There's a small chance the milk won't spoil immediately.
+        select: [
+          { slots: 3 }
+          {
+            slots: 7
+            reqItems: { it-camel-milk: 1.. }
+            items: { it-camel-milk: -1 }
+            resetStatusAge: true
+          }
+        ]
+      }
+      # Try to simulate individual aging of milk by checking if the party has 2 or more
+      # in inventory. They are likely milking a camel and gaining 1 milk every 2 days, which
+      # means we need to expire a milk 2 days after the last one, otherwise they accumalate.
+      # This keeps the milk count down to 1-3 in non-artic conditions, and 4-5 in arctic.
+      {
+        prio: 2
+        reqBiomeFlags: -arctic
+        reqItems: { it-camel-milk: 2.. }
+        reqAge: 3..
+        # There's a very small chance the milk won't spoil immediately.
+        select: [
+          { slots: 1 }
+          {
+            slots: 9
+            items: { it-camel-milk: -1 }
+            resetStatusAge: true
+          }
+        ]
+      }
+      {
+        prio: 2
+        reqBiomeFlags: +arctic
+        reqItems: { it-camel-milk: 5.. }
+        reqAge: 3..
+        # There's a small chance the milk won't spoil immediately.
+        select: [
+          { slots: 3 }
+          {
+            slots: 7
+            items: { it-camel-milk: -1 }
+            resetStatusAge: true
+          }
+        ]
+      }
+    ]
+  }
+
+  # Milk can be used for hydration if the trek is out of water.
+  #{
+  #  targetId: +tl-desert::moveCost
+  #  data: {it-goat-milk: 5}
+  #}
+]

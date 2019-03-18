@@ -1,0 +1,76 @@
+[
+  # Sprites for lite versions of camels.
+  {
+    id: sprite_bactrian_camel_01_lite
+    file: pack_animal_pack/img/sprite_bactrian_camel_01_lite.png
+  }
+  {
+    id: sprite_bactrian_camel_02_lite
+    file: pack_animal_pack/img/sprite_bactrian_camel_02_lite.png
+  }
+  {
+    id: crates_bactrian_camel_lite
+    file: pack_animal_pack/img/crates_bactrian_camel_lite.png
+  }
+  {
+    id: sprite_dromedary_camel_01_lite
+    file: pack_animal_pack/img/sprite_dromedary_camel_01_lite.png
+  }
+  {
+    id: sprite_dromedary_camel_02_lite
+    file: pack_animal_pack/img/sprite_dromedary_camel_02_lite.png
+  }
+  {
+    id: crates_dromedary_camel_lite
+    file: pack_animal_pack/img/crates_dromedary_camel_lite.png
+  }
+
+  # Bactrian camel sprites.
+  {
+    id: sprite_bactrian_camel_01
+    file: pack_animal_pack/img/sprite_bactrian_camel_01.png
+  }
+  {
+    id: face_bactrian_camel_01
+    file: pack_animal_pack/img/face_bactrian_camel_01.png
+  }
+  {
+    id: face_bactrian_camel_01_small
+    file: pack_animal_pack/img/face_bactrian_camel_01_small.png
+  }
+  {
+    id: minisprite_bactrian_camel_01
+    file: pack_animal_pack/img/minisprite_bactrian_camel_01.png
+  }
+  {
+    id: sprite_bactrian_camel_02
+    file: pack_animal_pack/img/sprite_bactrian_camel_02.png
+  }
+  {
+    id: face_bactrian_camel_02
+    file: pack_animal_pack/img/face_bactrian_camel_02.png
+  }
+  {
+    id: face_bactrian_camel_02_small
+    file: pack_animal_pack/img/face_bactrian_camel_02_small.png
+  }
+  {
+    id: minisprite_bactrian_camel_02
+    file: pack_animal_pack/img/minisprite_bactrian_camel_02.png
+  }
+  {
+    id: crates_bactrian_camel
+    file: pack_animal_pack/img/crates_bactrian_camel.png
+  }
+  {
+    id: saddle_bactrian_camel
+    type: slotted
+    file: pack_animal_pack/img/saddle_bactrian_camel.png
+  }
+
+  # Milk icon.
+  {
+    id: camel_milk
+    file: pack_animal_pack/img/milk_camel.png
+  }
+]

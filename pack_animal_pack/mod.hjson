@@ -20,27 +20,36 @@
     {
       import: pack_animal_pack/img/image_buffalo.hjson
     }
-		{
-			import: pack_animal_pack/img/image_goat.hjson
-		}
+    {
+      import: pack_animal_pack/img/image_camel.hjson
+    }
+    {
+      import: pack_animal_pack/img/image_goat.hjson
+    }
     {
       import: pack_animal_pack/img/image_horse.hjson
     }
-			import: pack_animal_pack/img/image_pap.hjson
-		}
-	],
-	configSettings:{
-	},
-	modEntries:[
-    # Add a horse that can be recruited at normal native villages. It behaves like a normal pack animal,
-    # can carry crates or be a fast mount.
+    {
+      import: pack_animal_pack/img/image_pap.hjson
+    }
+  ],
+  configSettings:{
+  },
+  modEntries:[
+    # Add female water buffalo that produce milk.
     {
       import: pack_animal_pack/src/buffalo_character.hjson
     }
-    # Add a goat that can be recruited at normal native villages. It behaves like a normal pack animal,
-    # but has interesting interactions with specific crew members.
     {
       import: pack_animal_pack/src/buffalo_products.hjson
+    }
+    # Add more variety to camels by adding bactrian camels to the dromedaries.
+    {
+      import: pack_animal_pack/src/camel_character.hjson
+    }
+    # Female camels will produce milk.
+    {
+      import: pack_animal_pack/src/camel_products.hjson
     }
 			import: pack_animal_pack/src/goat_character.hjson
 		}
@@ -72,6 +81,13 @@
     # Add a special trader to native villages that can help make the goat quest attainable.
     {
       import: pack_animal_pack/src/pap_outfitter.hjson
+    }
+
+    # Now include the pap files that modify the base game TCE script files.
+    {
+      import: pack_animal_pack/src/pap_chat.hjson
+    }
+      import: pack_animal_pack/src/pap_packAnimals.hjson
     }
     {
       import: pack_animal_pack/src/pap_villageRecruit.hjson

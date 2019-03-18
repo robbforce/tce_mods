@@ -46,4 +46,32 @@
       {dice: dc-donkey-1!6, mountedDice: dc-donkey-1!6}
     ]
   }
+
+  # A stripped down version of the horse, for event spawning.
+  {
+    id: anm-horse-lite
+    title: txt-anm-horse-title
+    debugCategory: etc
+    imgSlot: custom2
+    variations: [
+      {
+        gender: male
+        name: animalMale
+        sprite: sprite_horse_01
+        portrait: face_horse_01
+      }
+      {
+        gender: female
+        name: animalFemale
+        sprite: sprite_horse_02
+        portrait: face_horse_02
+      }
+      {
+        gender: female
+        name: animalFemale
+        sprite: sprite_horse_03
+        portrait: face_horse_03
+      }
+    ]
+  }
 ]
