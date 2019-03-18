@@ -1,10 +1,11 @@
 [
   # If there's a cultist in the party, add a random quest to sacrifice a goat to a Great Old One.
+  # Make it slightly more likely to be selected over other quests.
   {
     targetId: +evt-harbor-quest-offer::select
-    slots: 40
+    slots: 3
     reqWorld: 1..
-    charEvents: {reqCharFlags: +cultist}
+    charEvents: { reqCharFlags: +cultist }
     select: evt-quest-sacrifice-goat
   }
   {
@@ -14,20 +15,20 @@
       text: txt-evt-quest-sacrifice-goat
       actions: [
         {
-          actionText: txt-evt-harbor-quest-missionary-action
+          actionText: txt-generic-accept
           setPartyStatus: +sacrifice-goat
           text: txt-evt-quest-sacrifice-goat-accept
           select: evt-harbor-eventSelection
         }
         {
-          actionText: txt-evt-angry-demandPayment-action-1
+          actionText: txt-generic-refuse
           text: txt-evt-quest-sacrifice-goat-refuse
           select: evt-harbor-eventSelection
         }
       ]
     }
   }
-  
+
   # When accepted add the quest status to the party.
   {
     id: st-sacrifice-goat
@@ -37,17 +38,17 @@
     sprite: st_cthulhu
     important: true
   }
-  
+
   # Make sure there's an altar on the map.
   {
     targetId: +evt-world-initQuests::partyEvents
     optional: true
     reqPartyStatus: +sacrifice-goat
-    addLocation: {ref: loc-altar, range: world}
-    posTile: {locationFlags: +altar}
+    addLocation: { ref: loc-altar, range: world }
+    posTile: { locationFlags: +altar }
     setLocationFlags: +questGoat
   }
-  
+
   # Check the quest status and reward the party for success.
   {
     targetId: +evt-harbor-quest-completedCheck::select

@@ -74,10 +74,11 @@
     {
       import: pack_animal_pack/src/pap_common.hjson
     }
+    # Add some mutations for characters, which will be granted after sacrificing a goat for the quest.
     {
-			import: pack_animal_pack/src/pap_chat.hjson
-		}
-    
+      import: pack_animal_pack/src/pap_mutations.hjson
+    }
+
     # Add a special trader to native villages that can help make the goat quest attainable.
     {
       import: pack_animal_pack/src/pap_outfitter.hjson

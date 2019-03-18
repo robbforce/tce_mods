@@ -99,6 +99,16 @@
     sound: sfx_whipCrack
   }
   {
+    id: dp-tentacle-storm
+    name: txt-attack-name-tentacle-storm
+    faces: twhip_1 sword mind agility
+    damage: 4
+    shield: 4
+    targetBuff: buf-stun
+    multiAttack: true
+    sound: sfx_whipCrack
+  }
+  {
     id: dc-attack-mutateTentacle
     sprite: hud_dice_bg_animal_1.png
     faces: tentacle tentacle twhip_1 twhip_1 twhip_2 twhip_2
@@ -112,7 +122,7 @@
     sprite: st_mutate_tentacle
     bonus: {dice: dc-attack-mutateTentacle}
   }
-  
+
   # Lizard flesh grants improved regenaration.
   {
     id: st-mutateLizardFlesh
@@ -123,7 +133,7 @@
     sprite: st_mutate_lizard
     bonus: {healthRegen: 0.8}
   }
-  
+
   # Ominous aura adds static creature avoidance and prevents villages from following the party.
   {
     id: st-mutateOminousAura
@@ -135,35 +145,6 @@
     bonus: {zoneEventChance: -0.3}
   }
   # Redirect to a custom leave event if an aura is present.
-  {
-    targetId: /evt-village-actions::select
-    partyEvents: [
-      {
-        actions: [
-          evt-village-familyAmulet
-          evt-village-quest-letter
-          evt-village-rest
-          evt-village-recruit
-          evt-village-trade
-          evt-village-beastMaster
-        ]
-      }
-      {
-        charEvents: [
-          {
-            optional: true
-            reqStatus: +mutateOminousAura
-            actions: evt-village-leave-aura
-          }
-          {
-            optional: true
-            charEvents: {optional: false, count: all, reqStatus: -mutateOminousAura}
-            actions: evt-village-leave
-          }
-        ]
-      }
-    ]
-  }
   {
     id: evt-village-leave-aura
     actionText: txt-evt-leave-action
@@ -238,13 +219,35 @@
         ]
       }
     ]
+    charEvents: {
+      optional: true
+      count: 1..
+      reqCharFlags: +trekMember
+      setCharFlags: -trekMember
+    }
   }
-  
+
   # Dermal armour grants a special defense die.
   {
     id: dc-defend-mutateDermalArmour
     sprite: hud_dice_bg_animal_2.png
     faces: shell shell shield shield shield stability
+  }
+  {
+    id: dp-defend-dermal-deflect
+    name: txt-defend-dermal-deflect
+    debugCategory: mutation
+    faces: shell agility
+    shield: 6
+    sound: combat_shieldActivate
+  }
+  {
+    id: dp-defend-dermal-fortress
+    name: txt-defend-dermal-fortress
+    debugCategory: mutation
+    faces: shell shield stability
+    shield: 8
+    sound: combat_shieldActivate
   }
   {
     id: st-mutateDermalArmour
@@ -253,9 +256,9 @@
     title: txt-st-mutateDermalArmour-title
     description: txt-st-mutateDermalArmour
     sprite: st_mutate_armour
-    bonus: {dice: dc-defend-mutateDermalArmour}
+    bonus: { dice: dc-defend-mutateDermalArmour }
   }
-  
+
   # Venomous claws grant a combat die with claw attacks that leave a poison debuff.
   {
     id: df-vclaw_1
@@ -277,18 +280,24 @@
     name: txt-attack-name-vclaw-1
     faces: vclaw_1
     damage: 2
-    debugCategory: mutation
-    sound: sfx_combat_claw_2
     targetBuff: buf-poison
+    sound: sfx_combat_claw_2
   }
   {
     id: dp-attack-vclaw-2
     name: txt-attack-name-vclaw-2
     faces: vclaw_2
     damage: 4
-    debugCategory: mutation
-    sound: sfx_combat_claw_2
     targetBuff: buf-poison
+    sound: sfx_combat_claw_2
+  }
+  {
+    id: dp-attack-vclaw-disembowel
+    name: txt-attack-name-vclaw-disembowel
+    faces: vclaw_2 awareness sword
+    damage: 6
+    targetBuff: buf-bleeding-strong buf-poison
+    sound: sfx_combat_claw_2
   }
   {
     id: st-mutateClaws
@@ -297,9 +306,9 @@
     title: txt-st-mutateClaws-title
     description: txt-st-mutateClaws
     sprite: res_status_claws.png
-    bonus: {dice: dc-attack-mutateClaws}
+    bonus: { dice: dc-attack-mutateClaws }
   }
-  
+
   # Keratin horns grant a combat die with horn attacks that can leave a bleed debuff.
   {
     id: df-mhorns
@@ -312,8 +321,28 @@
     faces: ram ram ram ram mhorns mhorns
   }
   {
+    id: dp-attack-horns-charge
+    name: txt-attack-name-horns-charge
+    debugCategory: mutation
+    faces: ram agility
+    damage: 5
+    targetBuff: buf-stun
+    sound: combat_attack_1
+  }
+  {
+    id: dp-attack-horns-stampede
+    name: txt-attack-name-horns-stampede
+    debugCategory: mutation
+    faces: ram ram agility stability
+    damage: 4
+    targetBuff: buf-stun-2
+    multiAttack: true
+    sound: combat_attack_1
+  }
+  {
     id: dp-attack-horns
     name: txt-attack-name-64
+    debugCategory: mutation
     faces: mhorns
     damage: 4
     sound: combat_attack_1
@@ -321,9 +350,19 @@
   {
     id: dp-attack-horns-gore
     name: txt-attack-name-horns-gore
+    debugCategory: mutation
     faces: mhorns sword
-    damage: 4
+    damage: 5
     targetBuff: buf-bleeding-normal
+    sound: combat_attack_1
+  }
+  {
+    id: dp-attack-horns-impale
+    name: txt-attack-name-horns-impale
+    debugCategory: mutation
+    faces: mhorns sword stability
+    damage: 7
+    targetBuff: buf-bleeding-strong
     sound: combat_attack_1
   }
   {
@@ -333,6 +372,6 @@
     title: txt-st-mutateHorns-title
     description: txt-st-mutateHorns
     sprite: st_mutate_horns
-    bonus: {dice: dc-attack-mutateHorns}
+    bonus: { dice: dc-attack-mutateHorns }
   }
 ]

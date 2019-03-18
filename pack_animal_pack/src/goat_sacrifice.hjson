@@ -2,18 +2,18 @@
   # Add a separate "Sacrifice a goat" action first.
   {
     targetId: *evt-altar-actions
-    actions: [evt-altar-drop, evt-altar-sacrifice-actions, evt-altar-revive, evt-leave]
+    actions: [ evt-altar-drop, evt-altar-sacrifice-actions, evt-altar-revive, evt-leave ]
   }
   {
     id: evt-altar-sacrifice-actions
     alwaysShown: true
+    charEvents: { optional: false, count: any, reqCharFlags: +goat }
     actionText: txt-evt-altar-sacrifice-action
     text: txt-evt-altar-sacrifice
-    charEvents: {optional: false, count: any, reqCharFlags: +goat}
     select: evt-altar-sacrifice
   }
-  
-  # Create an action per goat for great old one sacrifices if the party has the Cthulhu quest followed
+
+  # Create an action per goat for great old one sacrifices if the party has the Cthulhu quest, followed
   # by standard sacrifice actions that will grant enough karma to resurrect a dead party member.
   {
     id: evt-altar-sacrifice
@@ -22,7 +22,7 @@
       {
         optional: true
         reqPartyStatus: +sacrifice-goat
-        charEvents: {reqCharFlags: +cultist}
+        charEvents: { reqCharFlags: +cultist }
         count: any
         reqCharFlags: +goat
         actions: {
@@ -39,9 +39,9 @@
               actionText: txt-evt-altar-pick-cultist-action
               setCharFlags: +sacrificed-goat
               partyEvents: [
-                {ref: evt-mutate-cultist}
-                {ref: evt-traumatize-cultist}
-                {ref: evt-superstitious-angry}
+                { ref: evt-mutate-cultist }
+                { ref: evt-traumatize-cultist }
+                { ref: evt-superstitious-angry }
               ]
               select: evt-altar-actions
             }
@@ -64,7 +64,7 @@
         }
       }
     ]
-    actions: {actionText: txt-evt-altar-sacrifice-goat-cancel-action, text: txt-evt-altar-sacrifice-goat-cancel, select: evt-altar-actions}
+    actions: { actionText: txt-generic-reconsider, text: txt-evt-altar-sacrifice-goat-cancel, select: evt-altar-actions }
   }
 
   # If the great old one sacrifice is selected then mutate and traumatize the cultist.
@@ -179,10 +179,10 @@
   {
     id: cl-mutate-cultist
     lines: [
-      {text: txt-cl-mutate-cultist, reqCharFlags: +humanoid}
+      { text: txt-cl-mutate-cultist, reqCharFlags: +humanoid }
     ]
   }
-  
+
   # Create some distinction in the text when reviving an animal.
   {
     targetId: /evt-altar-revive::storeEvents
