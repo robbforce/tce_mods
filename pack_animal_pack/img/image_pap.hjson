@@ -1,6 +1,10 @@
 [
   # Common status icons.
   {
+    id: st_remembered
+    file: pack_animal_pack/img/status_remembered.png
+  }
+  {
     id: st_produce_milk
     file: pack_animal_pack/img/status_produce_milk.png
   }
@@ -13,5 +17,77 @@
   {
     id: fxt_outfitter_01
     file: pack_animal_pack/img/fxt_outfitter_01.png
+  }
+  {
+    id: fxt_outfitter_02
+    file: pack_animal_pack/img/fxt_outfitter_02.png
+  }
+  {
+    id: fxt_outfitter_03
+    file: pack_animal_pack/img/fxt_outfitter_03.png
+  }
+  {
+    id: fxt_outfitter_04
+    file: pack_animal_pack/img/fxt_outfitter_04.png
+  }
+  {
+    id: fxt_outfitter_inuit
+    file: pack_animal_pack/img/fxt_outfitter_inuit.png
+  }
+  {
+    id: fxt_outfitter_lizard
+    file: pack_animal_pack/img/fxt_outfitter_01.png
+  }
+
+  # Outfitter event screens.
+  {
+    id: evt_fxt_outfitter_01_hut
+    file: pack_animal_pack/img/evt_fxt_outfitter_01_hut.png
+    type: slotted
+  }
+  {
+    id: evt_fxt_outfitter_01_animal
+    file: pack_animal_pack/img/evt_fxt_outfitter_01_animal.png
+    type: slotted
+  }
+  {
+    id: evt_fxt_outfitter_03_hut
+    file: pack_animal_pack/img/evt_fxt_outfitter_03_hut.png
+    type: slotted
+  }
+  {
+    id: evt_fxt_outfitter_03_animal
+    file: pack_animal_pack/img/evt_fxt_outfitter_03_animal.png
+    type: slotted
+  }
+  {
+    id: evt_fxt_outfitter_04_hut
+    file: pack_animal_pack/img/evt_fxt_outfitter_04_hut.png
+    type: slotted
+  }
+  {
+    id: evt_fxt_outfitter_04_animal
+    file: pack_animal_pack/img/evt_fxt_outfitter_04_animal.png
+    type: slotted
+  }
+  {
+    id: evt_fxt_outfitter_inuit_hut
+    file: pack_animal_pack/img/evt_fxt_outfitter_inuit_hut.png
+    type: slotted
+  }
+  {
+    id: evt_fxt_outfitter_inuit_animal
+    file: pack_animal_pack/img/evt_fxt_outfitter_inuit_animal.png
+    type: slotted
+  }
+  {
+    id: evt_fxt_outfitter_lizard_hut
+    file: pack_animal_pack/img/evt_fxt_outfitter_01_hut.png
+    type: slotted
+  }
+  {
+    id: evt_fxt_outfitter_lizard_animal
+    file: pack_animal_pack/img/evt_fxt_outfitter_01_animal.png
+    type: slotted
   }
 ]

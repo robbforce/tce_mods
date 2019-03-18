@@ -1,72 +1,217 @@
 [
-  # Add the outfitter as a sublocation to native villages so it will spawn with them.
+  # Add the outfitter to the spawn events of native villages so it can be added with them.
   {
-    targetId: /loc-village-1::subLocations
-    data: [
-      {
-        ref: loc-subLocation-village-1 loc-subLocation-village-2
-        offsets: 4n 4sw 4se
-        chance: 0.75
-      }
-      {
-        reqPartyStatus: +sacrifice-goat
-        ref: loc-village-outfitter
-        offsets: 1nw
-      }
+    targetId: /loc-village-1::spawnEvents
+    data: {
+      partyEvents: [
+        {
+          select: [
+            { setLocationFlags: +tribeWarriors }
+            { setLocationFlags: +tribeScouts }
+            { setLocationFlags: +tribeShamans }
+          ]
+        }
+        {
+          select: [
+            # If the player accepted the goat sacrifice quest then ensure the village has an outfitter,
+            # which will provide a goat for trade and make the quest achievable.
+            {
+              prio: 0
+              reqPartyStatus: +sacrifice-goat
+              setLocationFlags: +villageOutfitter
+              addLocation: { ref: loc-village-outfitter-dummy, range: 1, setPos: false }
+            }
+            # Otherwise there's a 33% chance a village will have an outfitter.
+            {
+              prio: 1
+              slots: 1
+              reqLocationFlags: -villageOutfitter
+              setLocationFlags: +villageOutfitter
+              addLocation: { ref: loc-village-outfitter-dummy, range: 1, setPos: false }
+            }
+            { prio: 1, slots: 2 }
+          ]
+        }
+      ]
+    }
+  }
+
+  # Inuit and lizard villages have their own spawn events so change them as well.
+  {
+    targetId: /loc-village-inuit::spawnEvents
+    data: {
+      partyEvents: [
+        {
+          setLocationFlags: +tribeInuit
+        }
+        {
+          select: [
+            # If the player accepted the goat sacrifice quest then ensure the village has an outfitter,
+            # which will provide a goat for trade and make the quest achievable.
+            {
+              prio: 0
+              reqPartyStatus: +sacrifice-goat
+              setLocationFlags: +villageOutfitter
+              addLocation: { ref: loc-village-outfitter-dummy, range: 1, setPos: false }
+            }
+            # Otherwise there's a 25% chance a village will have an outfitter.
+            {
+              prio: 1
+              slots: 1
+              reqLocationFlags: -villageOutfitter
+              setLocationFlags: +villageOutfitter
+              addLocation: { ref: loc-village-outfitter-dummy, range: 1, setPos: false }
+            }
+            { prio: 1, slots: 3 }
+          ]
+        }
+      ]
+    }
+  }
+
+  {
+    targetId: /loc-village-bones::spawnEvents
+    data: {
+      partyEvents: [
+        {
+          setLocationFlags: +tribeLizards
+        }
+        {
+          select: [
+            # If the player accepted the goat sacrifice quest then ensure the village has an outfitter,
+            # which will provide a goat for trade and make the quest achievable.
+            {
+              prio: 0
+              reqPartyStatus: +sacrifice-goat
+              setLocationFlags: +villageOutfitter
+              addLocation: { ref: loc-village-outfitter-dummy, range: 1, setPos: false }
+            }
+            # Otherwise there's a 25% chance a village will have an outfitter.
+            {
+              prio: 1
+              slots: 1
+              reqLocationFlags: -villageOutfitter
+              setLocationFlags: +villageOutfitter
+              addLocation: { ref: loc-village-outfitter-dummy, range: 1, setPos: false }
+            }
+            { prio: 1, slots: 3 }
+          ]
+        }
+      ]
+    }
+  }
+
+  # This reveal event will handle swapping the dummy location for the appropriate outfitter location.
+  {
+    targetId: *loc-village-1
+    revealEvents: [
+      { reqLocationFlags: +villageType_1, replaceLocations: { range: 1, old: loc-village-outfitter-dummy, new: loc-village-outfitter-1 }}
+      { reqLocationFlags: +villageType_2, replaceLocations: { range: 1, old: loc-village-outfitter-dummy, new: loc-village-outfitter-2 }}
+      { reqLocationFlags: +villageType_3, replaceLocations: { range: 1, old: loc-village-outfitter-dummy, new: loc-village-outfitter-3 }}
+      { reqLocationFlags: +villageType_4, replaceLocations: { range: 1, old: loc-village-outfitter-dummy, new: loc-village-outfitter-4 }}
+      { reqLocationFlags: +villageType_inuit, replaceLocations: { range: 1, old: loc-village-outfitter-dummy, new: loc-village-outfitter-inuit }}
+      { reqLocationFlags: +villageType_lizard, replaceLocations: { range: 1, old: loc-village-outfitter-dummy, new: loc-village-outfitter-lizard }}
     ]
   }
-  
+
+  # A dummy location that will "hide" the outfitter until the party reveals the village.
+  {
+    id: loc-village-outfitter-dummy
+    debugCategory: village
+    debugColor: blue
+    showHint: false
+    hintBiome: false
+    mapScore: 0
+    setTile: [
+      { ref: tl-dry, reqBiomeFlags: +dry | +desert }
+      { ref: tl-deepSnow, reqBiomeFlags: +arctic }
+      { ref: tl-grass, reqBiomeFlags: +grass | +prehistoric }
+    ]
+  }
+
   # The new outfitter location allows us to create an outfitter inventory distinct from
   # the village trade inventory.
   {
-    id: loc-village-outfitter
-    debugCategory: subLocations
+    id: loc-village-outfitter-1
+    debugCategory: village
     debugColor: blue
-    showHint: false
-    hideParty: false
-    sprite: [
-      {ref: fxt_outfitter_01, reqBiomeFlags: -arctic}
-      {ref: res_fxt_sub_fire_3.png, reqBiomeFlags: +arctic}
-    ]
-    setTile: [
-      {ref: tl-dry, reqBiomeFlags: +dry | +desert}
-      {ref: tl-deepSnow, reqBiomeFlags: +arctic}
-      {ref: tl-grass, reqBiomeFlags: +grass | +prehistoric}
-    ]
-    spawnEvents: {setLocationFlags: +villageOutfitter}
+    showHint: true
+    hintBiome: false
+    mapScore: 0
+    hideParty: true
+    initItems: { il-trade-outfitter: 6, il-trade-shamanHut: 2, it-water: 20, il-metaItems: 99 }
+    priceTable: village
+    sprite: fxt_outfitter_01
+    spawnEvents: { setLocationFlags: +outfitter +villageType_1 }
   }
-  
-  # If the player accepted the goat sacrifice quest then ensure the village has an outfitter
-  # which will provide a goat for trade and make the quest achievable.
   {
-    targetId: +evt-village-enter-selectEvent::select
-    prio: 1
-    reqWorld: 1..
-    reqPartyStatus: +sacrifice-goat
-    select: evt-village-enter-outfitter
+    id: loc-village-outfitter-2
+    extends: loc-village-outfitter-1
+    debugCategory: village
+    debugColor: blue
+    sprite: fxt_outfitter_02
+    spawnEvents: { setLocationFlags: +outfitter +villageType_2 }
+  }
+  {
+    id: loc-village-outfitter-3
+    extends: loc-village-outfitter-1
+    debugCategory: village
+    debugColor: blue
+    sprite: fxt_outfitter_03
+    spawnEvents: { setLocationFlags: +outfitter +villageType_3 }
+  }
+  {
+    id: loc-village-outfitter-4
+    extends: loc-village-outfitter-1
+    debugCategory: village
+    debugColor: blue
+    sprite: fxt_outfitter_04
+    spawnEvents: { setLocationFlags: +outfitter +villageType_4 }
+  }
+  {
+    id: loc-village-outfitter-inuit
+    extends: loc-village-outfitter-1
+    debugCategory: village
+    debugColor: blue
+    sprite: fxt_outfitter_inuit
+    spawnEvents: { setLocationFlags: +outfitter +villageType_inuit }
+  }
+  {
+    id: loc-village-outfitter-lizard
+    extends: loc-village-outfitter-1
+    debugCategory: village
+    debugColor: blue
+    sprite: fxt_outfitter_lizard
+    spawnEvents: { setLocationFlags: +outfitter +villageType_lizard }
   }
 
-  # Otherwise there's a chance a village will have an outfitter.
+  # On entering a village, set a trekMember flag on all animals already in the party, so we can determine
+  # a new recruit with a negative check. This will be used to prevent animal bartering exploitation.
   {
-    targetId: +evt-village-enter-selectEvent::select
-    prio: 3
-    reqWorld: 1..
-    reqLocationFlags: -outfitter
-    reqStanding: -3..
-    select: evt-village-enter-outfitter
+    targetId: +evt-village-enter-selectEvent::partyEvents
+    charEvents: {
+      optional: true
+      reqLocationFlags: +villageOutfitter
+      count: 1..
+      reqCharFlags: +animal
+      setCharFlags: +trekMember
+    }
   }
+
+  # Add some flavor text to the diary when the party first enters the village.
   {
-    id: evt-village-enter-outfitter
-    setLocationFlags: +outfitter
+    targetId: +evt-village-enter-selectEvent::partyEvents
+    optional: true
+    reqLocationFlags: +villageOutfitter -enterEvent
     text: txt-evt-village-enter-outfitter
-    actions: evt-village-enterCheck
   }
-  
-  # No way to slide in a new entry between existing entries so replace the entire list.
-  # This makes the mod not very compatible unfortunately.
+
+  # No way to slide in a new outfitter entry between existing entries so replace the entire list.
+  # Also need to add a custom leave event when a character has an ominous aura.
+  # This makes the mod not very compatible with other mods, unfortunately.
   {
     targetId: /evt-village-actions::select
-    data: [
+    partyEvents: [
       {
         actions: [
           evt-village-familyAmulet
@@ -76,48 +221,72 @@
           evt-village-trade
           evt-village-outfitter
           evt-village-beastMaster
-          evt-village-leave
+        ]
+      }
+      {
+        charEvents: [
+          {
+            optional: true
+            count: 1
+            reqStatus: +mutateOminousAura
+            actions: evt-village-leave-aura
+          }
+          {
+            optional: true
+            charEvents: { optional: false, count: all, reqStatus: -mutateOminousAura }
+            actions: evt-village-leave
+          }
         ]
       }
     ]
   }
-  
-  # Vistit the village outfitter. Teleport the party to the sublocation
-  # so we can provide a distinct location inventory.
+
+  # Define some outfitter NPCs
   {
-    id: evt-village-outfitter
-    reqLocationFlags: +outfitter
-    actionText: txt-evt-village-outfitter-action
-    posTile: {range: ..1, locationFlags: +villageOutfitter}
-    teleport: true
-    npc: npc-trader
-    text: txt-evt-village-outfitter
-    showPartyCount: true
-    #chat: cl-outfitter-recruit
-    select: evt-village-outfitter-actions
+    id: npc-native-outfitter
+    extends: npc-native-generic
+    debugCategory: NPC
+    title: txt-npc-native-outfitter-title
+    description: txt-npc-native-outfitter
+    imgSlot: custom
   }
   {
-    id: evt-village-outfitter-actions
+    id: npc-village-lizard-outfitter
+    extends: npc-village-lizard-generic
+    debugCategory: NPC
+    title: txt-npc-village-lizard-outfitter-title
+    description: txt-npc-village-lizard-outfitter
+    imgSlot: custom
+  }
+
+  # Visit the village outfitter. Teleport the party to the location so we can provide a distinct location
+  # inventory and ensure we're using these location flags for the tests.
+  {
+    id: evt-village-outfitter
+    reqLocationFlags: +villageOutfitter
+    actionText: txt-evt-village-outfitter-action
+    posTile: { range: ..1, locationFlags: +outfitter }
+    teleport: true
     partyEvents: [
       {
+        # The outfitter will have 1 to 4 animals, and an exotic if the player is lucky.
         optional: true
         reqLocationFlags: -packSet
         setLocationFlags: +packSet
         select: [
-          {slots: 3, setLocationFlags: +packNormal}
-          {slots: 1, setLocationFlags: +packExotic}
+          { slots: 3, setLocationFlags: +removeAnimal5 }
+          { slots: 1, setLocationFlags: +packCount5 }
         ]
       }
       {
-        # The outfitter will have 1 to 4 animals.
         optional: true
         reqLocationFlags: -packCountSet
         setLocationFlags: +packCountSet
         select: [
-          {slots: 2, setLocationFlags: +packCount1}
-          {slots: 3, setLocationFlags: +packCount1 +packCount2}
-          {slots: 4, setLocationFlags: +packCount1 +packCount2 +packCount3}
-          {slots: 1, setLocationFlags: +packCount1 +packCount2 +packCount3 +packCount4}
+          { slots: 2, setLocationFlags: +packCount1 +removeAnimal2 +removeAnimal3 +removeAnimal4 +extraAnimalCount7 }
+          { slots: 3, setLocationFlags: +packCount1 +packCount2 +removeAnimal3 +removeAnimal4 +extraAnimalCount5 }
+          { slots: 4, setLocationFlags: +packCount1 +packCount2 +packCount3 +removeAnimal4 +extraAnimalCount5 }
+          { slots: 1, setLocationFlags: +packCount1 +packCount2 +packCount3 +packCount4 +extraAnimalCount3 }
         ]
       }
       {
@@ -133,9 +302,15 @@
         reqLocationFlags: +packCount1 -packCount1Set
         setLocationFlags: +packCount1Set
         select: [
-          {slots: 1, setLocationFlags: +outfitterGoat1}
-          {slots: 1, setLocationFlags: +outfitterDonkey1}
-          {slots: 1, setLocationFlags: +outfitterHorse1}
+          { slots: 1, setLocationFlags: +outfitterGoat1 }
+          { slots: 1, setLocationFlags: +outfitterDonkey1 }
+          { slots: 1, setLocationFlags: +outfitterHorse1 }
+          { slots: 1, reqBiomeFlags: +grass | +jungle, setLocationFlags: +outfitterWaterBuffalo1 }
+          { slots: 1, reqBiomeFlags: +dry | +desert, setLocationFlags: +outfitterBactrianCamel1 }
+          { slots: 1, reqBiomeFlags: +dry | +desert, setLocationFlags: +outfitterDromedaryCamel1 }
+          { slots: 1, reqBiomeFlags: +arctic, setLocationFlags: +outfitterHusky1 }
+          { slots: 1, reqBiomeFlags: +prehistoric, setLocationFlags: +outfitterParasaurolophus1 }
+          { slots: 1, reqBiomeFlags: +prehistoric, setLocationFlags: +outfitterChasmosaurus1 }
         ]
       }
       {
@@ -143,9 +318,15 @@
         reqLocationFlags: +packCount2 -packCount2Set
         setLocationFlags: +packCount2Set
         select: [
-          {slots: 1, setLocationFlags: +outfitterGoat2}
-          {slots: 1, setLocationFlags: +outfitterDonkey2}
-          {slots: 1, setLocationFlags: +outfitterHorse2}
+          { slots: 1, setLocationFlags: +outfitterGoat2 }
+          { slots: 1, setLocationFlags: +outfitterDonkey2 }
+          { slots: 1, setLocationFlags: +outfitterHorse2 }
+          { slots: 1, reqBiomeFlags: +grass | +jungle, setLocationFlags: +outfitterWaterBuffalo2 }
+          { slots: 1, reqBiomeFlags: +dry | +desert, setLocationFlags: +outfitterBactrianCamel2 }
+          { slots: 1, reqBiomeFlags: +dry | +desert, setLocationFlags: +outfitterDromedaryCamel2 }
+          { slots: 1, reqBiomeFlags: +arctic, setLocationFlags: +outfitterHusky2 }
+          { slots: 1, reqBiomeFlags: +prehistoric, setLocationFlags: +outfitterParasaurolophus2 }
+          { slots: 1, reqBiomeFlags: +prehistoric, setLocationFlags: +outfitterChasmosaurus2 }
         ]
       }
       {
@@ -153,9 +334,15 @@
         reqLocationFlags: +packCount3 -packCount3Set
         setLocationFlags: +packCount3Set
         select: [
-          {slots: 1, setLocationFlags: +outfitterGoat3}
-          {slots: 1, setLocationFlags: +outfitterDonkey3}
-          {slots: 1, setLocationFlags: +outfitterHorse3}
+          { slots: 1, setLocationFlags: +outfitterGoat3 }
+          { slots: 1, setLocationFlags: +outfitterDonkey3 }
+          { slots: 1, setLocationFlags: +outfitterHorse3 }
+          { slots: 1, reqBiomeFlags: +grass | +jungle, setLocationFlags: +outfitterWaterBuffalo3 }
+          { slots: 1, reqBiomeFlags: +dry | +desert, setLocationFlags: +outfitterBactrianCamel3 }
+          { slots: 1, reqBiomeFlags: +dry | +desert, setLocationFlags: +outfitterDromedaryCamel3 }
+          { slots: 1, reqBiomeFlags: +arctic, setLocationFlags: +outfitterHusky3 }
+          { slots: 1, reqBiomeFlags: +prehistoric, setLocationFlags: +outfitterParasaurolophus3 }
+          { slots: 1, reqBiomeFlags: +prehistoric, setLocationFlags: +outfitterChasmosaurus3 }
         ]
       }
       {
@@ -163,48 +350,734 @@
         reqLocationFlags: +packCount4 -packCount4Set
         setLocationFlags: +packCount4Set
         select: [
-          {slots: 1, setLocationFlags: +outfitterGoat4}
-          {slots: 1, setLocationFlags: +outfitterDonkey4}
-          {slots: 1, setLocationFlags: +outfitterHorse4}
+          { slots: 1, setLocationFlags: +outfitterGoat4 }
+          { slots: 1, setLocationFlags: +outfitterDonkey4 }
+          { slots: 1, setLocationFlags: +outfitterHorse4 }
+          { slots: 1, reqBiomeFlags: +grass | +jungle, setLocationFlags: +outfitterWaterBuffalo4 }
+          { slots: 1, reqBiomeFlags: +dry | +desert, setLocationFlags: +outfitterBactrianCamel4 }
+          { slots: 1, reqBiomeFlags: +dry | +desert, setLocationFlags: +outfitterDromedaryCamel4 }
+          { slots: 1, reqBiomeFlags: +arctic, setLocationFlags: +outfitterHusky4 }
+          { slots: 1, reqBiomeFlags: +prehistoric, setLocationFlags: +outfitterParasaurolophus4 }
+          { slots: 1, reqBiomeFlags: +prehistoric, setLocationFlags: +outfitterChasmosaurus4 }
+        ]
+      }
+      # If the player was lucky enough, add an exotic pack animal to the list.
+      {
+        optional: true
+        reqLocationFlags: +packCount5 -packCount5Set
+        setLocationFlags: +packCount5Set
+        select: [
+          { slots: 1, reqBiomeFlags: -arctic, setLocationFlags: +outfitterTortoise5 }
+          { slots: 1, reqBiomeFlags: +prehistoric, setLocationFlags: +outfitterRaptor5 }
+        ]
+      }
+    ]
+    select: evt-outfitter-set-image-enter
+  }
+
+  {
+    id: evt-outfitter-set-image-enter
+    partyEvents: [ evt-outfitter-set-image-hut, evt-outfitter-enter, evt-outfitter-actions ]
+  }
+  {
+    id: evt-outfitter-set-image-actions
+    partyEvents: [ evt-outfitter-set-image-hut, evt-outfitter-set-npc, evt-outfitter-actions ]
+  }
+
+  {
+    id: evt-outfitter-set-image-hut
+    partyEvents: [
+      {
+        reqLocationFlags: +villageType_1
+        optional: true
+        showImage: { src: evt_fxt_outfitter_01_hut, type: day }
+      }
+      {
+        reqLocationFlags: +villageType_2
+        optional: true
+        showImage: { src: evt_fxt_outfitter_01_hut, type: day }
+      }
+      {
+        reqLocationFlags: +villageType_3
+        optional: true
+        showImage: { src: evt_fxt_outfitter_03_hut, type: day }
+      }
+      {
+        reqLocationFlags: +villageType_4
+        optional: true
+        showImage: { src: evt_fxt_outfitter_04_hut, type: day }
+      }
+      {
+        reqLocationFlags: +villageType_inuit
+        optional: true
+        showImage: {
+          src: evt_fxt_outfitter_inuit_hut
+          type: day
+          showCampfire: true
+          particles: [ pt-snow-1, pt-snow-2, pt-snow-3 ]
+          particlesChance: 0.5
+        }
+      }
+      {
+        reqLocationFlags: +villageType_lizard
+        optional: true
+        showImage: { src: evt_fxt_outfitter_lizard_hut, type: day }
+      }
+    ]
+  }
+
+  # Sets the NPCs (outfitter and animals) with introductory text.
+  {
+    id: evt-outfitter-enter
+    partyEvents: [
+      {
+        select: [
+          {
+            reqLocationFlags: -villageType_lizard
+            npc: npc-native-outfitter
+            npcEvents: { text: txt-evt-village-outfitter }
+          }
+          {
+            reqLocationFlags: +villageType_lizard
+            npc: npc-village-lizard-outfitter
+            npcEvents: { text: txt-evt-village-outfitter }
+          }
         ]
       }
       {
-        ref: evt-outfitter-recruit
+        select: [
+          { reqLocationFlags: +extraAnimalCount3, partyEvents: [ evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal ]}
+          { reqLocationFlags: +extraAnimalCount5, partyEvents: [ evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal ]}
+          { reqLocationFlags: +extraAnimalCount7, partyEvents: [ evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal ]}
+        ]
       }
-      #{
-      #  reqLocationFlags: +beastSpecial_1
-      #  optional: true
-      #  select: [
-      #    {reqBiomeFlags: -arctic, select: evt-village-beastMaster-recruit-tiger-white}
-      #    {
-      #      reqBiomeFlags: +arctic
-      #      select: evt-village-beastMaster-recruit-sabertooth-white
-      #    }
-      #  ]
-      #}
     ]
+  }
+
+  # Just set the NPCs (outfitter and animals) without the intro text.
+  {
+    id: evt-outfitter-set-npc
+    partyEvents: [
+      {
+        select: [
+          {
+            reqLocationFlags: -villageType_lizard
+            npc: npc-native-outfitter
+          }
+          {
+            reqLocationFlags: +villageType_lizard
+            npc: npc-village-lizard-outfitter
+          }
+        ]
+      }
+      {
+        select: [
+          { reqLocationFlags: +extraAnimalCount3, partyEvents: [ evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal ]}
+          { reqLocationFlags: +extraAnimalCount5, partyEvents: [ evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal ]}
+          { reqLocationFlags: +extraAnimalCount7, partyEvents: [ evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal, evt-outfitter-set-animal ]}
+        ]
+      }
+    ]
+  }
+  {
+    id: evt-outfitter-set-animal
+    select: [
+      { slots: 3, npc: anm-goat-lite }
+      { slots: 2, npc: anm-donkey-lite }
+      { slots: 1, npc: anm-horse-lite }
+      { slots: 1, reqBiomeFlags: +grass | +jungle, npc: anm-waterBuffalo-lite }
+      { slots: 1, reqBiomeFlags: +dry | +desert, npc: anm-bactrianCamel-lite }
+      { slots: 1, reqBiomeFlags: +dry | +desert, npc: anm-dromedaryCamel-lite }
+      { slots: 1, reqBiomeFlags: +arctic, npc: anm-husky-lite }
+      { slots: 1, reqBiomeFlags: +prehistoric, npc: anm-parasaurolophus-lite }
+      { slots: 1, reqBiomeFlags: +prehistoric, npc: anm-chasmosaurus-lite }
+    ]
+  }
+
+  {
+    id: evt-outfitter-actions
     actions: [
+      evt-outfitter-purchase-animal
+      evt-outfitter-barter-animal
       evt-outfitter-barter
       evt-outfitter-leave
     ]
   }
-  
+
+  # This creates a sub-menu of animals for purchase with goods.
+  {
+    id: evt-outfitter-purchase-animal
+    reqLocationFlags: -removeAnimal1 | -removeAnimal2 | -removeAnimal3 | -removeAnimal4 | -removeAnimal5
+    alwaysShown: true
+    actionText: txt-evt-outfitter-purchase-animal-action
+    text: txt-evt-outfitter-purchase-animal
+    chat: cl-outfitter-purchase-animal
+    showPartyCount: true
+    partyEvents: [
+      { ref: evt-outfitter-set-image-animal }
+      { ref: evt-outfitter-set-npc }
+      { ref: evt-outfitter-recruit }
+    ]
+  }
+  {
+    id: evt-outfitter-set-image-animal
+    partyEvents: [
+      {
+        reqLocationFlags: +villageType_1
+        optional: true
+        showImage: { src: evt_fxt_outfitter_01_animal, type: day }
+      }
+      {
+        reqLocationFlags: +villageType_2
+        optional: true
+        showImage: { src: evt_fxt_outfitter_01_animal, type: day }
+      }
+      {
+        reqLocationFlags: +villageType_3
+        optional: true
+        showImage: { src: evt_fxt_outfitter_03_animal, type: day }
+      }
+      {
+        reqLocationFlags: +villageType_4
+        optional: true
+        showImage: { src: evt_fxt_outfitter_04_animal, type: day }
+      }
+      {
+        reqLocationFlags: +villageType_inuit
+        optional: true
+        showImage: {
+          src: evt_fxt_outfitter_inuit_animal
+          type: day
+          showCampfire: true
+          particles: [ pt-snow-1, pt-snow-2, pt-snow-3 ]
+          particlesChance: 0.5
+        }
+      }
+      {
+        reqLocationFlags: +villageType_lizard
+        optional: true
+        showImage: { src: evt_fxt_outfitter_lizard_animal, type: day }
+      }
+    ]
+  }
+  {
+    id: cl-outfitter-purchase-animal
+    lines: [
+      { text: txt-cl-outfitter-purchase-animal, reqCharFlags: +humanoid }
+    ]
+  }
+
+  # This recruit event will set up the recruit actions based on the available animals. The party events are
+  # split up per distinct animal as I'm unaware of a loop function. The 5th animal (and 1-4 of exotics) are
+  # in the build list only because the player can fill the list by selling animals to the outfitter.
+  {
+    id: evt-outfitter-recruit
+    partyEvents: [
+      {
+        optional: true
+        reqLocationFlags: +outfitterWaterBuffalo1
+        select: [
+          { npc: anm-waterBuffalo-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-waterBuffalo, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterWaterBuffalo2
+        select: [
+          { npc: anm-waterBuffalo-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-waterBuffalo, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterWaterBuffalo3
+        select: [
+          { npc: anm-waterBuffalo-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-waterBuffalo, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterWaterBuffalo4
+        select: [
+          { npc: anm-waterBuffalo-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-waterBuffalo, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterWaterBuffalo5
+        select: [
+          { npc: anm-waterBuffalo-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-waterBuffalo, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterBactrianCamel1
+        select: [
+          { npc: anm-bactrianCamel-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-bactrianCamel-male, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterBactrianCamel2
+        select: [
+          { npc: anm-bactrianCamel-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-bactrianCamel-male, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterBactrianCamel3
+        select: [
+          { npc: anm-bactrianCamel-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-bactrianCamel-male, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterBactrianCamel4
+        select: [
+          { npc: anm-bactrianCamel-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-bactrianCamel-male, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterBactrianCamel5
+        select: [
+          { npc: anm-bactrianCamel-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-bactrianCamel-male, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterDromedaryCamel1
+        select: [
+          { npc: anm-dromedaryCamel-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-camel, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterDromedaryCamel2
+        select: [
+          { npc: anm-dromedaryCamel-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-camel, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterDromedaryCamel3
+        select: [
+          { npc: anm-dromedaryCamel-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-camel, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterDromedaryCamel4
+        select: [
+          { npc: anm-dromedaryCamel-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-camel, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterDromedaryCamel5
+        select: [
+          { npc: anm-dromedaryCamel-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-camel, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterGoat1
+        select: [
+          { npc: anm-goat-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-goat-male, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterGoat2
+        select: [
+          { npc: anm-goat-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-goat-male, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterGoat3
+        select: [
+          { npc: anm-goat-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-goat-male, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterGoat4
+        select: [
+          { npc: anm-goat-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-goat-male, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      {
+        optional: true
+        reqLocationFlags: +outfitterGoat5
+        select: [
+          { npc: anm-goat-female, npcEvents: { select: evt-outfitter-recruit-action }}
+          { npc: anm-goat-male, npcEvents: { select: evt-outfitter-recruit-action }}
+        ]
+      }
+      { optional: true, reqLocationFlags: +outfitterDonkey1, npc: anm-donkey, npcEvents: { select: evt-outfitter-recruit-action }}
+      { optional: true, reqLocationFlags: +outfitterDonkey2, npc: anm-donkey, npcEvents: { select: evt-outfitter-recruit-action }}
+      { optional: true, reqLocationFlags: +outfitterDonkey3, npc: anm-donkey, npcEvents: { select: evt-outfitter-recruit-action }}
+      { optional: true, reqLocationFlags: +outfitterDonkey4, npc: anm-donkey, npcEvents: { select: evt-outfitter-recruit-action }}
+      { optional: true, reqLocationFlags: +outfitterDonkey5, npc: anm-donkey, npcEvents: { select: evt-outfitter-recruit-action }}
+      { optional: true, reqLocationFlags: +outfitterHorse1, npc: anm-horse, npcEvents: { select: evt-outfitter-recruit-action }}
+      { optional: true, reqLocationFlags: +outfitterHorse2, npc: anm-horse, npcEvents: { select: evt-outfitter-recruit-action }}
+      { optional: true, reqLocationFlags: +outfitterHorse3, npc: anm-horse, npcEvents: { select: evt-outfitter-recruit-action }}
+      { optional: true, reqLocationFlags: +outfitterHorse4, npc: anm-horse, npcEvents: { select: evt-outfitter-recruit-action }}
+      { optional: true, reqLocationFlags: +outfitterHorse5, npc: anm-horse, npcEvents: { select: evt-outfitter-recruit-action }}
+      { optional: true, reqLocationFlags: +outfitterHusky1, npc: anm-dog-husky, npcEvents: { select: evt-outfitter-recruit-action }}
+      { optional: true, reqLocationFlags: +outfitterHusky2, npc: anm-dog-husky, npcEvents: { select: evt-outfitter-recruit-action }}
+      { optional: true, reqLocationFlags: +outfitterHusky3, npc: anm-dog-husky, npcEvents: { select: evt-outfitter-recruit-action }}
+      { optional: true, reqLocationFlags: +outfitterHusky4, npc: anm-dog-husky, npcEvents: { select: evt-outfitter-recruit-action }}
+      { optional: true, reqLocationFlags: +outfitterHusky5, npc: anm-dog-husky, npcEvents: { select: evt-outfitter-recruit-action }}
+      { optional: true, reqLocationFlags: +outfitterParasaurolophus1, npc: anm-parasaurolophus, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterParasaurolophus2, npc: anm-parasaurolophus, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterParasaurolophus3, npc: anm-parasaurolophus, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterParasaurolophus4, npc: anm-parasaurolophus, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterParasaurolophus5, npc: anm-parasaurolophus, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterChasmosaurus1, npc: anm-chasmosaurus, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterChasmosaurus2, npc: anm-chasmosaurus, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterChasmosaurus3, npc: anm-chasmosaurus, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterChasmosaurus4, npc: anm-chasmosaurus, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterChasmosaurus5, npc: anm-chasmosaurus, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterTortoise1, npc: anm-tortoise, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterTortoise2, npc: anm-tortoise, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterTortoise3, npc: anm-tortoise, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterTortoise4, npc: anm-tortoise, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterTortoise5, npc: anm-tortoise, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterRaptor1, npc: anm-raptor, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterRaptor2, npc: anm-raptor, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterRaptor3, npc: anm-raptor, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterRaptor4, npc: anm-raptor, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      { optional: true, reqLocationFlags: +outfitterRaptor5, npc: anm-raptor, npcEvents: { select: evt-outfitter-recruit-smooth-action }}
+      {
+        actions: {
+          actionText: txt-generic-back
+          text: txt-evt-outfitter-barter-cancel
+          select: evt-outfitter-set-image-actions
+        }
+      }
+    ]
+  }
+
+  # This will build the list of available animals as actions, for furry animals.
+  {
+    id: evt-outfitter-recruit-action
+    actions: {
+      actionText: txt-evt-outfitter-recruit-action
+      select: [
+        { reqCharFlags: +goat, barter: { baseValue: 10, closeEvents: { ref: evt-outfitter-recruit-close }, cancelEvents: { ref: evt-outfitter-recruit-cancel }}}
+        { reqCharacter: anm-donkey, barter: { baseValue: 15, closeEvents: { ref: evt-outfitter-recruit-close }, cancelEvents: { ref: evt-outfitter-recruit-cancel }}}
+        { reqCharacter: anm-horse, barter: { baseValue: 50, closeEvents: { ref: evt-outfitter-recruit-close }, cancelEvents: { ref: evt-outfitter-recruit-cancel }}}
+        { reqCharFlags: +buffalo, barter: { baseValue: 55, closeEvents: { ref: evt-outfitter-recruit-close }, cancelEvents: { ref: evt-outfitter-recruit-cancel }}}
+        #{ reqCharacter: anm-yak, barter: { baseValue: 75, closeEvents: { ref: evt-outfitter-recruit-close }, cancelEvents: { ref: evt-outfitter-recruit-cancel }}}
+        { reqCharFlags: +camel, barter: { baseValue: 30, closeEvents: { ref: evt-outfitter-recruit-close }, cancelEvents: { ref: evt-outfitter-recruit-cancel }}}
+        { reqCharacter: anm-dog-husky, barter: { baseValue: 30, closeEvents: { ref: evt-outfitter-recruit-close }, cancelEvents: { ref: evt-outfitter-recruit-cancel }}}
+      ]
+    }
+  }
+  # This will build the list of available animals as actions, for smooth animals.
+  {
+    id: evt-outfitter-recruit-smooth-action
+    actions: {
+      actionText: txt-evt-outfitter-recruit-smooth-action
+      select: [
+        { reqCharacter: anm-parasaurolophus, barter: { baseValue: 70, closeEvents: { ref: evt-outfitter-recruit-close }, cancelEvents: { ref: evt-outfitter-recruit-cancel }}}
+        { reqCharacter: anm-chasmosaurus, barter: { baseValue: 90, closeEvents: { ref: evt-outfitter-recruit-close }, cancelEvents: { ref: evt-outfitter-recruit-cancel }}}
+        { reqCharacter: anm-tortoise, barter: { baseValue: 80, closeEvents: { ref: evt-outfitter-recruit-close }, cancelEvents: { ref: evt-outfitter-recruit-cancel }}}
+        { reqCharacter: anm-raptor, barter: { baseValue: 90, closeEvents: { ref: evt-outfitter-recruit-close }, cancelEvents: { ref: evt-outfitter-recruit-cancel }}}
+      ]
+    }
+  }
+  # Set flags to remove the purchased animal from the action list.
+  {
+    id: evt-outfitter-recruit-close
+    text: txt-evt-outfitter-recruit
+    partyEvents: [
+      {
+        select: [
+          { prio: 1, reqLocationFlags: +outfitterGoat1, reqCharFlags: +goat, setLocationFlags: -outfitterGoat1 +removeAnimal1 }
+          { prio: 1, reqLocationFlags: +outfitterDonkey1, reqCharacter: anm-donkey, setLocationFlags: -outfitterDonkey1 +removeAnimal1 }
+          { prio: 1, reqLocationFlags: +outfitterHorse1, reqCharacter: anm-horse, setLocationFlags: -outfitterHorse1 +removeAnimal1 }
+          { prio: 1, reqLocationFlags: +outfitterWaterBuffalo1, reqCharFlags: +buffalo, setLocationFlags: -outfitterWaterBuffalo1 +removeAnimal1 }
+          { prio: 1, reqLocationFlags: +outfitterBactrianCamel1, reqCharFlags: +bactrianCamel, setLocationFlags: -outfitterBactrianCamel1 +removeAnimal1 }
+          { prio: 1, reqLocationFlags: +outfitterDromedaryCamel1, reqCharFlags: +dromedaryCamel, setLocationFlags: -outfitterDromedaryCamel1 +removeAnimal1 }
+          { prio: 1, reqLocationFlags: +outfitterHusky1, reqCharacter: anm-dog-husky, setLocationFlags: -outfitterHusky1 +removeAnimal1 }
+          { prio: 1, reqLocationFlags: +outfitterParasaurolophus1, reqCharacter: anm-parasaurolophus, setLocationFlags: -outfitterParasaurolophus1 +removeAnimal1 }
+          { prio: 1, reqLocationFlags: +outfitterChasmosaurus1, reqCharacter: anm-chasmosaurus, setLocationFlags: -outfitterChasmosaurus1 +removeAnimal1 }
+          { prio: 1, reqLocationFlags: +outfitterTortoise1, reqCharacter: anm-tortoise, setLocationFlags: -outfitterTortoise1 +removeAnimal1 }
+          { prio: 1, reqLocationFlags: +outfitterRaptor1, reqCharacter: anm-raptor, setLocationFlags: -outfitterRaptor1 +removeAnimal1 }
+
+          { prio: 2, reqLocationFlags: +outfitterGoat2, reqCharFlags: +goat, setLocationFlags: -outfitterGoat2 +removeAnimal2 }
+          { prio: 2, reqLocationFlags: +outfitterDonkey2, reqCharacter: anm-donkey, setLocationFlags: -outfitterDonkey2 +removeAnimal2 }
+          { prio: 2, reqLocationFlags: +outfitterHorse2, reqCharacter: anm-horse, setLocationFlags: -outfitterHorse2 +removeAnimal2 }
+          { prio: 2, reqLocationFlags: +outfitterWaterBuffalo2, reqCharFlags: +buffalo, setLocationFlags: -outfitterWaterBuffalo2 +removeAnimal2 }
+          { prio: 2, reqLocationFlags: +outfitterBactrianCamel2, reqCharFlags: +bactrianCamel, setLocationFlags: -outfitterBactrianCamel2 +removeAnimal2 }
+          { prio: 2, reqLocationFlags: +outfitterDromedaryCamel2, reqCharFlags: +dromedaryCamel, setLocationFlags: -outfitterDromedaryCamel2 +removeAnimal2 }
+          { prio: 2, reqLocationFlags: +outfitterHusky2, reqCharacter: anm-dog-husky, setLocationFlags: -outfitterHusky2 +removeAnimal2 }
+          { prio: 2, reqLocationFlags: +outfitterParasaurolophus2, reqCharacter: anm-parasaurolophus, setLocationFlags: -outfitterParasaurolophus2 +removeAnimal2 }
+          { prio: 2, reqLocationFlags: +outfitterChasmosaurus2, reqCharacter: anm-chasmosaurus, setLocationFlags: -outfitterChasmosaurus2 +removeAnimal2 }
+          { prio: 2, reqLocationFlags: +outfitterTortoise2, reqCharacter: anm-tortoise, setLocationFlags: -outfitterTortoise2 +removeAnimal2 }
+          { prio: 2, reqLocationFlags: +outfitterRaptor2, reqCharacter: anm-raptor, setLocationFlags: -outfitterRaptor2 +removeAnimal2 }
+
+          { prio: 3, reqLocationFlags: +outfitterGoat3, reqCharFlags: +goat, setLocationFlags: -outfitterGoat3 +removeAnimal3 }
+          { prio: 3, reqLocationFlags: +outfitterDonkey3, reqCharacter: anm-donkey, setLocationFlags: -outfitterDonkey3 +removeAnimal3 }
+          { prio: 3, reqLocationFlags: +outfitterHorse3, reqCharacter: anm-horse, setLocationFlags: -outfitterHorse3 +removeAnimal3 }
+          { prio: 3, reqLocationFlags: +outfitterWaterBuffalo3, reqCharFlags: +buffalo, setLocationFlags: -outfitterWaterBuffalo3 +removeAnimal3 }
+          { prio: 3, reqLocationFlags: +outfitterBactrianCamel3, reqCharFlags: +bactrianCamel, setLocationFlags: -outfitterBactrianCamel3 +removeAnimal3 }
+          { prio: 3, reqLocationFlags: +outfitterDromedaryCamel3, reqCharFlags: +dromedaryCamel, setLocationFlags: -outfitterDromedaryCamel3 +removeAnimal3 }
+          { prio: 3, reqLocationFlags: +outfitterHusky3, reqCharacter: anm-dog-husky, setLocationFlags: -outfitterHusky3 +removeAnimal3 }
+          { prio: 3, reqLocationFlags: +outfitterParasaurolophus3, reqCharacter: anm-parasaurolophus, setLocationFlags: -outfitterParasaurolophus3 +removeAnimal3 }
+          { prio: 3, reqLocationFlags: +outfitterChasmosaurus3, reqCharacter: anm-chasmosaurus, setLocationFlags: -outfitterChasmosaurus3 +removeAnimal3 }
+          { prio: 3, reqLocationFlags: +outfitterTortoise3, reqCharacter: anm-tortoise, setLocationFlags: -outfitterTortoise3 +removeAnimal3 }
+          { prio: 3, reqLocationFlags: +outfitterRaptor3, reqCharacter: anm-raptor, setLocationFlags: -outfitterRaptor3 +removeAnimal3 }
+
+          { prio: 4, reqLocationFlags: +outfitterGoat4, reqCharFlags: +goat, setLocationFlags: -outfitterGoat4 +removeAnimal4 }
+          { prio: 4, reqLocationFlags: +outfitterDonkey4, reqCharacter: anm-donkey, setLocationFlags: -outfitterDonkey4 +removeAnimal4 }
+          { prio: 4, reqLocationFlags: +outfitterHorse4, reqCharacter: anm-horse, setLocationFlags: -outfitterHorse4 +removeAnimal4 }
+          { prio: 4, reqLocationFlags: +outfitterWaterBuffalo4, reqCharFlags: +buffalo, setLocationFlags: -outfitterWaterBuffalo4 +removeAnimal4 }
+          { prio: 4, reqLocationFlags: +outfitterBactrianCamel4, reqCharFlags: +bactrianCamel, setLocationFlags: -outfitterBactrianCamel4 +removeAnimal4 }
+          { prio: 4, reqLocationFlags: +outfitterDromedaryCamel4, reqCharFlags: +dromedaryCamel, setLocationFlags: -outfitterDromedaryCamel4 +removeAnimal4 }
+          { prio: 4, reqLocationFlags: +outfitterHusky4, reqCharacter: anm-dog-husky, setLocationFlags: -outfitterHusky4 +removeAnimal4 }
+          { prio: 4, reqLocationFlags: +outfitterParasaurolophus4, reqCharacter: anm-parasaurolophus, setLocationFlags: -outfitterParasaurolophus4 +removeAnimal4 }
+          { prio: 4, reqLocationFlags: +outfitterChasmosaurus4, reqCharacter: anm-chasmosaurus, setLocationFlags: -outfitterChasmosaurus4 +removeAnimal4 }
+          { prio: 4, reqLocationFlags: +outfitterTortoise4, reqCharacter: anm-tortoise, setLocationFlags: -outfitterTortoise4 +removeAnimal4 }
+          { prio: 4, reqLocationFlags: +outfitterRaptor4, reqCharacter: anm-raptor, setLocationFlags: -outfitterRaptor4 +removeAnimal4 }
+
+          { prio: 5, reqLocationFlags: +outfitterGoat5, reqCharFlags: +goat, setLocationFlags: -outfitterGoat5 +removeAnimal5 }
+          { prio: 5, reqLocationFlags: +outfitterDonkey5, reqCharacter: anm-donkey, setLocationFlags: -outfitterDonkey5 +removeAnimal5 }
+          { prio: 5, reqLocationFlags: +outfitterHorse5, reqCharacter: anm-horse, setLocationFlags: -outfitterHorse5 +removeAnimal5 }
+          { prio: 5, reqLocationFlags: +outfitterWaterBuffalo5, reqCharFlags: +buffalo, setLocationFlags: -outfitterWaterBuffalo5 +removeAnimal5 }
+          { prio: 5, reqLocationFlags: +outfitterBactrianCamel5, reqCharFlags: +bactrianCamel, setLocationFlags: -outfitterBactrianCamel5 +removeAnimal5 }
+          { prio: 5, reqLocationFlags: +outfitterDromedaryCamel5, reqCharFlags: +dromedaryCamel, setLocationFlags: -outfitterDromedaryCamel5 +removeAnimal5 }
+          { prio: 5, reqLocationFlags: +outfitterHusky5, reqCharacter: anm-dog-husky, setLocationFlags: -outfitterHusky5 +removeAnimal5 }
+          { prio: 5, reqLocationFlags: +outfitterParasaurolophus5, reqCharacter: anm-parasaurolophus, setLocationFlags: -outfitterParasaurolophus5 +removeAnimal5 }
+          { prio: 5, reqLocationFlags: +outfitterChasmosaurus5, reqCharacter: anm-chasmosaurus, setLocationFlags: -outfitterChasmosaurus5 +removeAnimal5 }
+          { prio: 5, reqLocationFlags: +outfitterTortoise5, reqCharacter: anm-tortoise, setLocationFlags: -outfitterTortoise5 +removeAnimal5 }
+          { prio: 5, reqLocationFlags: +outfitterRaptor5, reqCharacter: anm-raptor, setLocationFlags: -outfitterRaptor5 +removeAnimal5 }
+        ]
+      }
+      {
+        setCharFlags: +trekMember
+        addNPC: true
+        setPartyFlags: +recruitedSomebody
+        select: evt-outfitter-set-image-actions
+      }
+    ]
+  }
+  {
+    id: evt-outfitter-recruit-cancel
+    text: txt-evt-outfitter-barter-cancel
+    select: evt-outfitter-set-image-actions
+  }
+
+  # The outfitter will also accept an animal as pre-payment for goods, but only animals that are
+  # common to their biome as they wouldn't know how to care for animals unknown to them.
+  {
+    id: evt-outfitter-barter-animal
+    alwaysShown: true
+    charEvents: { optional: false, count: any, reqCharFlags: +animal }
+    actionText: txt-evt-outfitter-barter-animal-action
+    text: txt-evt-outfitter-barter-animal
+    select: evt-outfitter-barter-animal-actions
+  }
+  # They won't take animals they find dangerous or unable to survive in their environment.
+  {
+    id: evt-outfitter-barter-animal-actions
+    charEvents: [
+      {
+        optional: true
+        count: any
+        reqCharFlags: +packAnimal -camel -elephant -tortoise -dinosaur | +dog
+        actions: {
+          actionText: txt-evt-outfitter-barter-animal-select
+          select: evt-outfitter-barter-animal-list
+        }
+      }
+      {
+        optional: true
+        count: any
+        reqBiomeFlags: -arctic
+        reqCharFlags: +packAnimal +camel | +packAnimal +elephant | +packAnimal +tortoise
+        actions: {
+          actionText: txt-evt-outfitter-barter-animal-select
+          select: evt-outfitter-barter-animal-list
+        }
+      }
+      {
+        optional: true
+        count: any
+        reqBiomeFlags: +prehistoric
+        reqCharFlags: +packAnimal +dinosaur
+        actions: {
+          actionText: txt-evt-outfitter-barter-animal-select
+          select: evt-outfitter-barter-animal-list
+        }
+      }
+    ]
+    actions: {
+      actionText: txt-generic-reconsider
+      text: txt-evt-outfitter-barter-animal-cancel
+      select: evt-outfitter-actions
+    }
+  }
+  {
+    id: evt-outfitter-barter-animal-list
+    select: [
+      # Trying to barter an animal they just recruited from the village.
+      {
+        prio: 0
+        reqStatus: +remembered-by-outfitter
+        text: txt-evt-outfitter-barter-recruited-animal
+        actions: [
+          {
+            actionText: txt-generic-accept
+            text: txt-evt-outfitter-barter-recruited-animal-accept
+            removeCharacter: true
+            select: evt-outfitter-actions
+          }
+          {
+            actionText: txt-generic-refuse
+            text: txt-evt-outfitter-barter-recruited-animal-refuse
+            select: evt-outfitter-actions
+          }
+        ]
+      }
+
+      # Pack animals.
+      { prio: 1, reqCharFlags: +goat, barter: { baseValue: -10, closeEvents: { ref: evt-outfitter-barter-animal-close }, cancelEvents: { ref: evt-outfitter-barter-animal-cancel }}}
+      { prio: 1, reqCharacter: anm-donkey, barter: { baseValue: -15, closeEvents: { ref: evt-outfitter-barter-animal-close }, cancelEvents: { ref: evt-outfitter-barter-animal-cancel }}}
+      { prio: 1, reqCharacter: anm-horse, barter: { baseValue: -50, closeEvents: { ref: evt-outfitter-barter-animal-close }, cancelEvents: { ref: evt-outfitter-barter-animal-cancel }}}
+      { prio: 1, reqCharFlags: +buffalo, barter: { baseValue: -55, closeEvents: { ref: evt-outfitter-barter-animal-close }, cancelEvents: { ref: evt-outfitter-barter-animal-cancel }}}
+      { prio: 1, reqCharFlags: +camel, barter: { baseValue: -30, closeEvents: { ref: evt-outfitter-barter-animal-close }, cancelEvents: { ref: evt-outfitter-barter-animal-cancel }}}
+      { prio: 1, reqCharacter: anm-dog-husky, barter: { baseValue: -30, closeEvents: { ref: evt-outfitter-barter-animal-close }, cancelEvents: { ref: evt-outfitter-barter-animal-cancel }}}
+      { prio: 1, reqCharacter: anm-parasaurolophus, barter: { baseValue: -70, closeEvents: { ref: evt-outfitter-barter-animal-close }, cancelEvents: { ref: evt-outfitter-barter-animal-cancel }}}
+      { prio: 1, reqCharacter: anm-chasmosaurus, barter: { baseValue: -90, closeEvents: { ref: evt-outfitter-barter-animal-close }, cancelEvents: { ref: evt-outfitter-barter-animal-cancel }}}
+      { prio: 1, reqCharacter: anm-tortoise, barter: { baseValue: -80, closeEvents: { ref: evt-outfitter-barter-animal-close }, cancelEvents: { ref: evt-outfitter-barter-animal-cancel }}}
+      { prio: 1, reqCharacter: anm-raptor, barter: { baseValue: -90, closeEvents: { ref: evt-outfitter-barter-animal-close }, cancelEvents: { ref: evt-outfitter-barter-animal-cancel }}}
+
+      # Other beasts.
+      { prio: 1, reqCharFlags: +dog -packAnimal, barter: { baseValue: -15, closeEvents: { ref: evt-outfitter-barter-animal-close }, cancelEvents: { ref: evt-outfitter-barter-animal-cancel }}}
+      { prio: 1, reqCharacter: anm-elephant, barter: { baseValue: -120, closeEvents: { ref: evt-outfitter-barter-animal-close }, cancelEvents: { ref: evt-outfitter-barter-animal-cancel }}}
+
+      # Any other animal that gets through the filters, but isn't accounted for will get a nominal credit.
+      { prio: 2, barter: { baseValue: -20, closeEvents: { ref: evt-outfitter-barter-animal-close }, cancelEvents: { ref: evt-outfitter-barter-animal-cancel }}}
+    ]
+  }
+  {
+    id: evt-outfitter-barter-animal-close
+    text: txt-evt-outfitter-barter-animal-done
+    # If there's room and a pack animal was sold, add it to the purchase stock.
+    partyEvents: [
+      {
+        select: [
+          { prio: 1, reqLocationFlags: +removeAnimal1, reqCharFlags: +goat, setLocationFlags: +outfitterGoat1 -removeAnimal1 }
+          { prio: 1, reqLocationFlags: +removeAnimal1, reqCharacter: anm-donkey, setLocationFlags: +outfitterDonkey1 -removeAnimal1 }
+          { prio: 1, reqLocationFlags: +removeAnimal1, reqCharacter: anm-horse, setLocationFlags: +outfitterHorse1 -removeAnimal1 }
+          { prio: 1, reqLocationFlags: +removeAnimal1, reqCharFlags: +buffalo, setLocationFlags: +outfitterWaterBuffalo1 -removeAnimal1 }
+          { prio: 1, reqLocationFlags: +removeAnimal1, reqCharFlags: +bactrianCamel, setLocationFlags: +outfitterBactrianCamel1 -removeAnimal1 }
+          { prio: 1, reqLocationFlags: +removeAnimal1, reqCharFlags: +dromedaryCamel, setLocationFlags: +outfitterDromedaryCamel1 -removeAnimal1 }
+          { prio: 1, reqLocationFlags: +removeAnimal1, reqCharacter: anm-dog-husky, setLocationFlags: +outfitterHusky1 -removeAnimal1 }
+          { prio: 1, reqLocationFlags: +removeAnimal1, reqCharacter: anm-parasaurolophus, setLocationFlags: +outfitterParasaurolophus1 -removeAnimal1 }
+          { prio: 1, reqLocationFlags: +removeAnimal1, reqCharacter: anm-chasmosaurus, setLocationFlags: +outfitterChasmosaurus1 -removeAnimal1 }
+          { prio: 1, reqLocationFlags: +removeAnimal1, reqCharacter: anm-tortoise, setLocationFlags: +outfitterTortoise1 -removeAnimal1 }
+          { prio: 1, reqLocationFlags: +removeAnimal1, reqCharacter: anm-raptor, setLocationFlags: +outfitterRaptor1 -removeAnimal1 }
+
+          { prio: 2, reqLocationFlags: +removeAnimal2, reqCharFlags: +goat, setLocationFlags: +outfitterGoat2 -removeAnimal2 }
+          { prio: 2, reqLocationFlags: +removeAnimal2, reqCharacter: anm-donkey, setLocationFlags: +outfitterDonkey2 -removeAnimal2 }
+          { prio: 2, reqLocationFlags: +removeAnimal2, reqCharacter: anm-horse, setLocationFlags: +outfitterHorse2 -removeAnimal2 }
+          { prio: 2, reqLocationFlags: +removeAnimal2, reqCharFlags: +buffalo, setLocationFlags: +outfitterWaterBuffalo2 -removeAnimal2 }
+          { prio: 2, reqLocationFlags: +removeAnimal2, reqCharFlags: +bactrianCamel, setLocationFlags: +outfitterBactrianCamel2 -removeAnimal2 }
+          { prio: 2, reqLocationFlags: +removeAnimal2, reqCharFlags: +dromedaryCamel, setLocationFlags: +outfitterDromedaryCamel2 -removeAnimal2 }
+          { prio: 2, reqLocationFlags: +removeAnimal2, reqCharacter: anm-dog-husky, setLocationFlags: +outfitterHusky2 -removeAnimal2 }
+          { prio: 2, reqLocationFlags: +removeAnimal2, reqCharacter: anm-parasaurolophus, setLocationFlags: +outfitterParasaurolophus2 -removeAnimal2 }
+          { prio: 2, reqLocationFlags: +removeAnimal2, reqCharacter: anm-chasmosaurus, setLocationFlags: +outfitterChasmosaurus2 -removeAnimal2 }
+          { prio: 2, reqLocationFlags: +removeAnimal2, reqCharacter: anm-tortoise, setLocationFlags: +outfitterTortoise2 -removeAnimal2 }
+          { prio: 2, reqLocationFlags: +removeAnimal2, reqCharacter: anm-raptor, setLocationFlags: +outfitterRaptor2 -removeAnimal2 }
+
+          { prio: 3, reqLocationFlags: +removeAnimal3, reqCharFlags: +goat, setLocationFlags: +outfitterGoat3 -removeAnimal3 }
+          { prio: 3, reqLocationFlags: +removeAnimal3, reqCharacter: anm-donkey, setLocationFlags: +outfitterDonkey3 -removeAnimal3 }
+          { prio: 3, reqLocationFlags: +removeAnimal3, reqCharacter: anm-horse, setLocationFlags: +outfitterHorse3 -removeAnimal3 }
+          { prio: 3, reqLocationFlags: +removeAnimal3, reqCharFlags: +buffalo, setLocationFlags: +outfitterWaterBuffalo3 -removeAnimal3 }
+          { prio: 3, reqLocationFlags: +removeAnimal3, reqCharFlags: +bactrianCamel, setLocationFlags: +outfitterBactrianCamel3 -removeAnimal3 }
+          { prio: 3, reqLocationFlags: +removeAnimal3, reqCharFlags: +dromedaryCamel, setLocationFlags: +outfitterDromedaryCamel3 -removeAnimal3 }
+          { prio: 3, reqLocationFlags: +removeAnimal3, reqCharacter: anm-dog-husky, setLocationFlags: +outfitterHusky3 -removeAnimal3 }
+          { prio: 3, reqLocationFlags: +removeAnimal3, reqCharacter: anm-parasaurolophus, setLocationFlags: +outfitterParasaurolophus3 -removeAnimal3 }
+          { prio: 3, reqLocationFlags: +removeAnimal3, reqCharacter: anm-chasmosaurus, setLocationFlags: +outfitterChasmosaurus3 -removeAnimal3 }
+          { prio: 3, reqLocationFlags: +removeAnimal3, reqCharacter: anm-tortoise, setLocationFlags: +outfitterTortoise3 -removeAnimal3 }
+          { prio: 3, reqLocationFlags: +removeAnimal3, reqCharacter: anm-raptor, setLocationFlags: +outfitterRaptor3 -removeAnimal3 }
+
+          { prio: 4, reqLocationFlags: +removeAnimal4, reqCharFlags: +goat, setLocationFlags: +outfitterGoat4 -removeAnimal4 }
+          { prio: 4, reqLocationFlags: +removeAnimal4, reqCharacter: anm-donkey, setLocationFlags: +outfitterDonkey4 -removeAnimal4 }
+          { prio: 4, reqLocationFlags: +removeAnimal4, reqCharacter: anm-horse, setLocationFlags: +outfitterHorse4 -removeAnimal4 }
+          { prio: 4, reqLocationFlags: +removeAnimal4, reqCharFlags: +buffalo, setLocationFlags: +outfitterWaterBuffalo4 -removeAnimal4 }
+          { prio: 4, reqLocationFlags: +removeAnimal4, reqCharFlags: +bactrianCamel, setLocationFlags: +outfitterBactrianCamel4 -removeAnimal4 }
+          { prio: 4, reqLocationFlags: +removeAnimal4, reqCharFlags: +dromedaryCamel, setLocationFlags: +outfitterDromedaryCamel4 -removeAnimal4 }
+          { prio: 4, reqLocationFlags: +removeAnimal4, reqCharacter: anm-dog-husky, setLocationFlags: +outfitterHusky4 -removeAnimal4 }
+          { prio: 4, reqLocationFlags: +removeAnimal4, reqCharacter: anm-parasaurolophus, setLocationFlags: +outfitterParasaurolophus4 -removeAnimal4 }
+          { prio: 4, reqLocationFlags: +removeAnimal4, reqCharacter: anm-chasmosaurus, setLocationFlags: +outfitterChasmosaurus4 -removeAnimal4 }
+          { prio: 4, reqLocationFlags: +removeAnimal4, reqCharacter: anm-tortoise, setLocationFlags: +outfitterTortoise4 -removeAnimal4 }
+          { prio: 4, reqLocationFlags: +removeAnimal4, reqCharacter: anm-raptor, setLocationFlags: +outfitterRaptor4 -removeAnimal4 }
+
+          { prio: 5, reqLocationFlags: +removeAnimal5, reqCharFlags: +goat, setLocationFlags: +outfitterGoat5 -removeAnimal5 }
+          { prio: 5, reqLocationFlags: +removeAnimal5, reqCharacter: anm-donkey, setLocationFlags: +outfitterDonkey5 -removeAnimal5 }
+          { prio: 5, reqLocationFlags: +removeAnimal5, reqCharacter: anm-horse, setLocationFlags: +outfitterHorse5 -removeAnimal5 }
+          { prio: 5, reqLocationFlags: +removeAnimal5, reqCharFlags: +buffalo, setLocationFlags: +outfitterWaterBuffalo5 -removeAnimal5 }
+          { prio: 5, reqLocationFlags: +removeAnimal5, reqCharFlags: +bactrianCamel, setLocationFlags: +outfitterBactrianCamel5 -removeAnimal5 }
+          { prio: 5, reqLocationFlags: +removeAnimal5, reqCharFlags: +dromedaryCamel, setLocationFlags: +outfitterDromedaryCamel5 -removeAnimal5 }
+          { prio: 5, reqLocationFlags: +removeAnimal5, reqCharacter: anm-dog-husky, setLocationFlags: +outfitterHusky5 -removeAnimal5 }
+          { prio: 5, reqLocationFlags: +removeAnimal5, reqCharacter: anm-parasaurolophus, setLocationFlags: +outfitterParasaurolophus5 -removeAnimal5 }
+          { prio: 5, reqLocationFlags: +removeAnimal5, reqCharacter: anm-chasmosaurus, setLocationFlags: +outfitterChasmosaurus5 -removeAnimal5 }
+          { prio: 5, reqLocationFlags: +removeAnimal5, reqCharacter: anm-tortoise, setLocationFlags: +outfitterTortoise5 -removeAnimal5 }
+          { prio: 5, reqLocationFlags: +removeAnimal5, reqCharacter: anm-raptor, setLocationFlags: +outfitterRaptor5 -removeAnimal5 }
+        ]
+      }
+      {
+        removeCharacter: true
+        select: evt-outfitter-actions
+      }
+    ]
+  }
+  {
+    id: evt-outfitter-barter-animal-cancel
+    text: txt-evt-outfitter-barter-cancel
+    select: evt-outfitter-actions
+  }
+
   # The outfitter should have locally-sourced sanity items and tools available for trade.
   {
     id: il-trade-outfitter
     items: [
-      {slots: 2, it-machete: 20}
-      {slots: 2, it-rope: 20}
-      {slots: 2, it-shovel: 5}
-      {slots: 2, it-torch: 10}
-      {slots: 2, it-meat-animal-cooked-perfect: 10}
-      {slots: 2, it-goat-cheese-perfect: 5}
-      {slots: 1, it-elephantTusk: 3}
-      {slots: 1, it-firstAid: 10}
-      {slots: 1, it-crystalBall: 1}
-      {slots: 1, it-pendulum-treasure: 1}
-      {slots: 1, it-pendulum-blessing: 1}
-      {slots: 1, it-pendulum-shrine: 1}
+      { slots: 2, it-machete: 20 }
+      { slots: 2, it-rope: 20 }
+      { slots: 2, it-shovel: 5 }
+      { slots: 2, it-torch: 10 }
+      { slots: 2, it-meat-animal-cooked-perfect: 10 }
+      { slots: 2, it-goat-cheese-perfect: 5 }
+      { slots: 1, it-elephantTusk: 3 }
+      { slots: 1, it-firstAid: 10 }
+      { slots: 1, it-crystalBall: 1 }
+      { slots: 1, it-pendulum-treasure: 1 }
+      { slots: 1, it-pendulum-blessing: 1 }
+      { slots: 1, it-pendulum-shrine: 1 }
     ]
   }
   {
@@ -212,213 +1085,43 @@
     actionText: txt-evt-outfitter-barter-action
     select: [
       {
-        slots: 4
+        #slots: 4
+        standing: ..3
         barter: {
-          items: {il-trade-outfitter: 6, il-trade-shamanHut: 2, it-water: 20, il-metaItems: 99}
-          closeEvents: evt-village-outfitter-actions
-          cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
+          closeEvents: evt-outfitter-actions
+          cancelEvents: { text: txt-evt-outfitter-barter-cancel, select: evt-outfitter-actions }
         }
       }
       {
-        slots: 1
+        #slots: 1
+        standing: 4..
         barter: {
-          items: {il-trade-outfitter: 6, il-trade-trader-weapons: 2, il-trade-shamanHut: 3, it-water: 20, il-metaItems: 99}
-          closeEvents: evt-village-outfitter-actions
-          cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
+          items: { il-trade-outfitter: 5, il-trade-trader-weapons: 2, il-trade-shamanHut: 1, it-water: 20, il-metaItems: 99 }
+          closeEvents: evt-outfitter-actions
+          cancelEvents: { text: txt-evt-outfitter-barter-cancel, select: evt-outfitter-actions }
         }
       }
-    ]
-  }
-  
-  # This recruit event will set up the recruit actions based on the available animals.
-  {
-    id: evt-outfitter-recruit
-    partyEvents: [
-      {optional: true, reqLocationFlags: +outfitterGoat1, select: evt-outfitter-recruit-goat}
-      {optional: true, reqLocationFlags: +outfitterGoat2, select: evt-outfitter-recruit-goat}
-      {optional: true, reqLocationFlags: +outfitterGoat3, select: evt-outfitter-recruit-goat}
-      {optional: true, reqLocationFlags: +outfitterGoat4, select: evt-outfitter-recruit-goat}
-      {optional: true, reqLocationFlags: +outfitterDonkey1, select: evt-outfitter-recruit-donkey}
-      {optional: true, reqLocationFlags: +outfitterDonkey2, select: evt-outfitter-recruit-donkey}
-      {optional: true, reqLocationFlags: +outfitterDonkey3, select: evt-outfitter-recruit-donkey}
-      {optional: true, reqLocationFlags: +outfitterDonkey4, select: evt-outfitter-recruit-donkey}
-      {optional: true, reqLocationFlags: +outfitterHorse1, select: evt-outfitter-recruit-horse}
-      {optional: true, reqLocationFlags: +outfitterHorse2, select: evt-outfitter-recruit-horse}
-      {optional: true, reqLocationFlags: +outfitterHorse3, select: evt-outfitter-recruit-horse}
-      {optional: true, reqLocationFlags: +outfitterHorse4, select: evt-outfitter-recruit-horse}
     ]
   }
 
-  # Buy a goat.
-  {
-    id: evt-outfitter-recruit-goat
-    select: [
-      {
-        npc: anm-goat-female
-        npcEvents: {
-          actions: [
-            {
-              actionText: txt-evt-outfitter-recruit-action
-              barter: {
-                baseValue: 20
-                closeEvents: {
-                  text: txt-evt-outfitter-recruit
-                  addNPC: true
-                  partyEvents: evt-outfitter-recruited-goat
-                  setPartyFlags: +recruitedSomebody
-                  select: evt-village-outfitter-actions
-                }
-                cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
-              }
-            }
-          ]
-        }
-      }
-      {
-        npc: anm-goat-male
-        npcEvents: {
-          actions: [
-            {
-              actionText: txt-evt-outfitter-recruit-action
-              barter: {
-                baseValue: 20
-                closeEvents: {
-                  text: txt-evt-outfitter-recruit
-                  addNPC: true
-                  partyEvents: evt-outfitter-recruited-goat
-                  setPartyFlags: +recruitedSomebody
-                  select: evt-village-outfitter-actions
-                }
-                cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
-              }
-            }
-          ]
-        }
-      }
-    ]
-  }
-  # Set flags to remove the goat from the action list and for customizing the outfitter description.
-  {
-    id: evt-outfitter-recruited-goat
-    select: [
-      {prio: 1, reqLocationFlags: +outfitterGoat1, setLocationFlags: -outfitterGoat1 +recruited1}
-      {prio: 2, reqLocationFlags: +outfitterGoat2, setLocationFlags: -outfitterGoat2 +recruited2}
-      {prio: 3, reqLocationFlags: +outfitterGoat3, setLocationFlags: -outfitterGoat3 +recruited3}
-      {prio: 4, reqLocationFlags: +outfitterGoat4, setLocationFlags: -outfitterGoat4 +recruited4}
-    ]
-  }
-  
-  # Buy a donkey.
-  {
-    id: evt-outfitter-recruit-donkey
-    npc: anm-donkey
-    npcEvents: {
-      actions: [
-        {
-          actionText: txt-evt-outfitter-recruit-action
-          barter: {
-            baseValue: 30
-            closeEvents: {
-              text: txt-evt-outfitter-recruit
-              addNPC: true
-              partyEvents: evt-outfitter-recruited-donkey
-              setPartyFlags: +recruitedSomebody
-              select: evt-village-outfitter-actions
-            }
-            cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
-          }
-        }
-      ]
-    }
-  }
-  # Set flags to remove the donkey from the action list and for customizing the outfitter description.
-  {
-    id: evt-outfitter-recruited-donkey
-    select: [
-      {prio: 1, reqLocationFlags: +outfitterDonkey1, setLocationFlags: -outfitterDonkey1 +recruited1}
-      {prio: 2, reqLocationFlags: +outfitterDonkey2, setLocationFlags: -outfitterDonkey2 +recruited2}
-      {prio: 3, reqLocationFlags: +outfitterDonkey3, setLocationFlags: -outfitterDonkey3 +recruited3}
-      {prio: 4, reqLocationFlags: +outfitterDonkey4, setLocationFlags: -outfitterDonkey4 +recruited4}
-    ]
-  }
-
-  # Buy a horse.
-  {
-    id: evt-outfitter-recruit-horse
-    npc: anm-horse
-    npcEvents: {
-      actions: [
-        {
-          actionText: txt-evt-outfitter-recruit-action
-          barter: {
-            baseValue: 40
-            closeEvents: {
-              text: txt-evt-outfitter-recruit
-              addNPC: true
-              partyEvents: evt-outfitter-recruited-horse
-              setPartyFlags: +recruitedSomebody
-              select: evt-village-outfitter-actions
-            }
-            cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
-          }
-        }
-      ]
-    }
-  }
-  # Set flags to remove the horse from the action list and for customizing the outfitter description.
-  {
-    id: evt-outfitter-recruited-horse
-    select: [
-      {prio: 1, reqLocationFlags: +outfitterHorse1, setLocationFlags: -outfitterHorse1 +recruited1}
-      {prio: 2, reqLocationFlags: +outfitterHorse2, setLocationFlags: -outfitterHorse2 +recruited2}
-      {prio: 3, reqLocationFlags: +outfitterHorse3, setLocationFlags: -outfitterHorse3 +recruited3}
-      {prio: 4, reqLocationFlags: +outfitterHorse4, setLocationFlags: -outfitterHorse4 +recruited4}
-    ]
-  }
-
-  {
-    id: evt-outfitter-recruit-water-buffalo
-    actions: [
-      {
-        actionText: txt-evt-outfitter-recruit-action
-        barter: {
-          baseValue: 50
-          closeEvents: {
-            text: txt-evt-outfitter-recruit
-            addCharacter: anm-water-buffalo
-            #setPartyFlags: +recruitedSomebody
-            select: evt-village-outfitter-actions
-          }
-          cancelEvents: {text: txt-evt-outfitter-barter-cancel, select: evt-village-outfitter-actions}
-        }
-      }
-    ]
-  }
-  {
-    id: evt-outfitter-recruit-yak
-    #actions: [
-    #  {
-    #    actionText: txt-evt-outfitter-recruit-action
-    #    barter: {
-    #      baseValue: 75
-    #      closeEvents: {
-    #        text: txt-evt-outfitter-recruit
-    #        addCharacter: anm-yak
-    #        setPartyFlags: +recruitedSomebody
-    #      }
-    #      cancelEvents: {text: txt-evt-outfitter-barter-cancel}
-    #    }
-        select: evt-village-outfitter-actions
-    #  }
-    #]
-  }
-  
-  # When leaving, teleport the party back to the village before pulling up the village actions.
+  # When leaving the outfitter, teleport the party back to the village before pulling up the village actions.
   {
     id: evt-outfitter-leave
     actionText: txt-evt-village-main-update-action
-    posTile: {range: ..1, locationFlags: +village}
+    posTile: { range: ..1, locationFlags: +villageOutfitter }
     teleport: true
-    select: evt-village-main-update
+    select: evt-village-setImageDay-update
+  }
+
+  # Unset the trekMember flag from the animals upon leaving the village.
+  {
+    targetId: *evt-village-leave
+    charEvents: {
+      optional: true
+      reqLocationFlags: +villageOutfitter
+      count: 1..
+      reqCharFlags: +trekMember
+      setCharFlags: -trekMember
+    }
   }
 ]

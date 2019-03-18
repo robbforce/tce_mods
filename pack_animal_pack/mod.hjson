@@ -51,25 +51,29 @@
     {
       import: pack_animal_pack/src/camel_products.hjson
     }
-			import: pack_animal_pack/src/goat_character.hjson
-		}
-    # Female goats will produce milk, which can be made into delicious (or not) goat cheese if there's a cook.
+    # Add goats that can be recruited at normal native villages. They behave like a normal pack animal,
+    # but have interesting interactions with specific crew members.
     {
-			import: pack_animal_pack/src/goat_products.hjson
-		}
-    # Add a goat quest that can come up randomly if there's a cultist in the party.
+      import: pack_animal_pack/src/goat_character.hjson
+    }
+    # Female goats will produce milk, which can be made into delicious (or not) goat cheese, if there's a cook.
     {
-			import: pack_animal_pack/src/goat_quest.hjson
-		}
-    # Add some mutations for characters, which will be granted after sacrificing a goat for the quest.
+      import: pack_animal_pack/src/goat_products.hjson
+    }
+    # Add a goat quest that can come up randomly, if there's a cultist in the party.
     {
-			import: pack_animal_pack/src/pap_mutations.hjson
-		}
+      import: pack_animal_pack/src/goat_quest.hjson
+    }
     # If there's a goat in the party, add sacrifice actions when visiting an altar.
     {
-			import: pack_animal_pack/src/goat_sacrifice.hjson
-		}
-    
+      import: pack_animal_pack/src/goat_sacrifice.hjson
+    }
+    # Add horses that can be recruited at normal native villages. They behave like a normal pack animal,
+    # can carry crates or be a fast mount.
+    {
+      import: pack_animal_pack/src/horse_character.hjson
+    }
+
     # Add some buttons, events, etc. that are used throughout the pack.
     {
       import: pack_animal_pack/src/pap_common.hjson

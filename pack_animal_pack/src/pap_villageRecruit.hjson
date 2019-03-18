@@ -12,6 +12,32 @@
     targetId: +evt-village-recruit-select-animal::select
     ref: evt-village-recruit-horse
   }
+
+  # A new status that will get applied to any pack animal recruited from a village that has an outfitter.
+  {
+    id: st-remembered-by-outfitter
+    debugCategory: generic
+    title: txt-st-remembered-by-outfitter-title
+    description: txt-st-remembered-by-outfitter
+    important: true
+    autoRemove: true
+    buffDays: 45..60
+    sprite: st_remembered
+  }
+
+  # Set the remembered status on recruiting to indicate the animal was recruited from this village.
+  # This will be checked to prevent the player from immediately bartering the animal for goods.
+  {
+    targetId: +evt-village-main-update::partyEvents
+    optional: true
+    reqLocationFlags: +villageOutfitter
+    charEvents: {
+      count: 1
+      reqCharFlags: +packAnimal -trekMember
+      setStatus: +remembered-by-outfitter
+    }
+  }
+
   # Replace the buffalo recruit event now that we've added modified females.
   {
     targetId: /evt-village-recruit-buffalo
