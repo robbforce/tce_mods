@@ -2,9 +2,12 @@
   # Recruit in generic village
   {
     targetId: +evt-village-recruit-select-animal::select
-    data: [
-      "evt-village-recruit-horse",
-      "evt-village-recruit-goat"
+    ref: evt-village-recruit-bactrianCamel
+  }
+  {
+    targetId: +evt-village-recruit-select-animal::select
+    ref: evt-village-recruit-goat
+  }
     ]
   }
 

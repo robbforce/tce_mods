@@ -57,10 +57,10 @@
 			import: pack_animal_pack/src/goat_sacrifice.hjson
 		}
     
-    # Now include the pap files that modify the common TCE config files.
+    # Add some buttons, events, etc. that are used throughout the pack.
     {
-			import: pack_animal_pack/src/pap_villageRecruit.hjson
-		}
+      import: pack_animal_pack/src/pap_common.hjson
+    }
     {
 			import: pack_animal_pack/src/pap_chat.hjson
 		}
@@ -69,5 +69,8 @@
     {
       import: pack_animal_pack/src/pap_outfitter.hjson
     }
-	]
+    {
+      import: pack_animal_pack/src/pap_villageRecruit.hjson
+    }
+  ]
 }

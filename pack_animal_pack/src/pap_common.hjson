@@ -1,0 +1,158 @@
+[
+  # Dromedary camels and water buffalo produce a lot more milk. Let's avoid flooding inventory with milk, so just reduce the age by 1.
+  {
+    id: st-produce-milk-2day
+    debugCategory: Animals
+    title: txt-st-produce-milk-title
+    description: txt-st-produce-milk-2day
+    hideNotifications: true
+    sprite: st_produce_milk
+    dayEvents: {
+      reqAge: 2..
+      select: [
+        { optional: true, reqCharFlags: +buffalo, charEvents: { reqCharFlags: +nativeAnimalHandler, items: { it-buffalo-milk: 1 }}}
+        { optional: true, reqCharFlags: +dromedaryCamel, charEvents: { reqCharFlags: +bedouin, items: { it-camel-milk: 1 }}}
+      ]
+      resetStatusAge: true
+    }
+  }
+
+  # For a dairy animal with this status, if there's an animal handler or bedouin, produce milk every 3 days.
+  {
+    id: st-produce-milk-3day
+    debugCategory: Animals
+    title: txt-st-produce-milk-title
+    description: txt-st-produce-milk-3day
+    hideNotifications: true
+    sprite: st_produce_milk
+    dayEvents: {
+      reqAge: 3..
+      select: [
+        { optional: true, reqCharFlags: +goat, charEvents: { reqCharFlags: +nativeAnimalHandler | +bedouin, items: { it-goat-milk: 1 }}}
+        { optional: true, reqCharFlags: +bactrianCamel, charEvents: { reqCharFlags: +bedouin, items: { it-camel-milk: 1 }}}
+        { optional: true, reqCharFlags: +yak, charEvents: { reqCharFlags: +nativeAnimalHandler, items: { it-yak-milk: 1 }}}
+      ]
+      resetStatusAge: true
+    }
+  }
+
+  # Give the player the option to toggle milking a dairy animal. Default is enabled.
+  # I'd like to have a single button with a conditional test per animal, but that doesn't seem to be supported.
+  {
+    id: btn-disable-milk-production-buffalo-or-yak
+    reqCharFlags: +buffalo | +yak
+    reqStatus: +produce-milk-3day | +produce-milk-2day
+    charEvents: { reqCharFlags: +nativeAnimalHandler }
+    title: txt-evt-disable-milk-production
+    useEvents: evt-toggle-milk-production
+  }
+  {
+    id: btn-enable-milk-production-buffalo-or-yak
+    reqCharFlags: +buffalo | +yak
+    reqStatus: +produce-milk-disabled-3day | +produce-milk-disabled-2day
+    charEvents: { reqCharFlags: +nativeAnimalHandler }
+    title: txt-evt-enable-milk-production
+    useEvents: evt-toggle-milk-production
+  }
+  {
+    id: btn-disable-milk-production-camel
+    reqCharFlags: +camel
+    reqStatus: +produce-milk-3day | +produce-milk-2day
+    charEvents: { reqCharFlags: +bedouin }
+    title: txt-evt-disable-milk-production
+    useEvents: evt-toggle-milk-production
+  }
+  {
+    id: btn-enable-milk-production-camel
+    reqCharFlags: +camel
+    reqStatus: +produce-milk-disabled-3day | +produce-milk-disabled-2day
+    charEvents: { reqCharFlags: +bedouin }
+    title: txt-evt-enable-milk-production
+    useEvents: evt-toggle-milk-production
+  }
+  {
+    id: btn-disable-milk-production-goat
+    reqCharFlags: +goat
+    reqStatus: +produce-milk-3day | +produce-milk-2day
+    charEvents: { reqCharFlags: +nativeAnimalHandler | +bedouin }
+    title: txt-evt-disable-milk-production
+    useEvents: evt-toggle-milk-production
+  }
+  {
+    id: btn-enable-milk-production-goat
+    reqCharFlags: +goat
+    reqStatus: +produce-milk-disabled-3day | +produce-milk-disabled-2day
+    charEvents: { reqCharFlags: +nativeAnimalHandler | +bedouin }
+    title: txt-evt-enable-milk-production
+    useEvents: evt-toggle-milk-production
+  }
+  {
+    id: evt-toggle-milk-production
+    select: [
+        { optional: true, reqStatus: +produce-milk-3day, setStatus: -produce-milk-3day +produce-milk-disabled-3day }
+        { optional: true, reqStatus: +produce-milk-2day, setStatus: -produce-milk-2day +produce-milk-disabled-2day }
+        { optional: true, reqStatus: +produce-milk-disabled-3day, setStatus: -produce-milk-disabled-3day +produce-milk-3day }
+        { optional: true, reqStatus: +produce-milk-disabled-2day, setStatus: -produce-milk-disabled-2day +produce-milk-2day }
+    ]
+  }
+
+  # A dummy status that displays an empty produce milk icon and otherwise does nothing.
+   {
+    id: st-produce-milk-disabled-2day
+    debugCategory: Animals
+    title: txt-st-produce-milk-title
+    description: txt-st-produce-milk-2day
+    hideNotifications: true
+    sprite: st_produce_milk_disabled
+  }
+  {
+    id: st-produce-milk-disabled-3day
+    debugCategory: Animals
+    title: txt-st-produce-milk-title
+    description: txt-st-produce-milk-3day
+    hideNotifications: true
+    sprite: st_produce_milk_disabled
+  }
+
+  # Milk and cheese chat messages.
+  {
+    id: cl-it-milk
+    lines: [
+      { text: txt-cl-it-milk, reqCharFlags: +humanoid, reqStatus: -alcoholic }
+      { text: txt-cl-it-milk-alcoholic, reqCharFlags: +humanoid, reqStatus: +alcoholic }
+      { text: txt-cl-it-milk-coward, reqCharFlags: +humanoid +coward }
+      { text: txt-cl-it-milk-paranoid, reqCharFlags: +humanoid +paranoid }
+      { text: txt-cl-it-milk-witty, reqCharFlags: +humanoid +witty }
+    ]
+  }
+  {
+    id: cl-make-cheese-mediocre
+    lines: [
+      { text: txt-cl-make-cheese-mediocre, reqCharFlags: +cook }
+    ]
+  }
+  {
+    id: cl-make-cheese-perfect
+    lines: [
+      { text: txt-cl-make-cheese-perfect, reqCharFlags: +cook }
+    ]
+  }
+  {
+    id: cl-item-cheese-poor
+    lines: [
+      { text: txt-cl-item-cheese-poor, reqCharFlags: +humanoid -cook }
+    ]
+  }
+  {
+    id: cl-item-cheese-mediocre
+    lines: [
+      { text: txt-cl-item-cheese-mediocre, reqCharFlags: +humanoid -cook }
+    ]
+  }
+  {
+    id: cl-item-cheese-perfect
+    lines: [
+      { text: txt-cl-item-cheese-perfect, reqCharFlags: +humanoid -cook }
+    ]
+  }
+]

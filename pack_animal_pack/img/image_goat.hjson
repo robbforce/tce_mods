@@ -60,29 +60,25 @@
     id: face_goat_06
     file: pack_animal_pack/img/face_goat_06.png
   }
-  
-  # Cheese related.
-  {
-    id: st_produce_milk
-    file: pack_animal_pack/img/status_produce_milk.png
-  }    
+
+  # Milk & cheese related.
   {
     id: goat_milk
-    file: pack_animal_pack/img/goat_milk.png
+    file: pack_animal_pack/img/milk_goat.png
   }
   {
-    id: goat_cheese_sour
-    file: pack_animal_pack/img/goat_cheese_sour.png
+    id: goat_cheese_poor
+    file: pack_animal_pack/img/cheese_goat_poor.png
   }
   {
-    id: goat_cheese_tangy
-    file: pack_animal_pack/img/goat_cheese_tangy.png
+    id: goat_cheese_mediocre
+    file: pack_animal_pack/img/cheese_goat_mediocre.png
   }
   {
     id: goat_cheese_perfect
-    file: pack_animal_pack/img/goat_cheese_perfect.png
+    file: pack_animal_pack/img/cheese_goat_perfect.png
   }
-  
+
   # Cthulhu quest and mutations.
   {
     id: st_cthulhu

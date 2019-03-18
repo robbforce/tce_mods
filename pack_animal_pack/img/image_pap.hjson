@@ -1,4 +1,14 @@
 [
+  # Common status icons.
+  {
+    id: st_produce_milk
+    file: pack_animal_pack/img/status_produce_milk.png
+  }
+  {
+    id: st_produce_milk_disabled
+    file: pack_animal_pack/img/status_produce_milk_disabled.png
+  }
+
 	# Outfitter location sprites.
   {
     id: fxt_outfitter_01

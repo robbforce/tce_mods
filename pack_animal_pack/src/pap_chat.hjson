@@ -7,7 +7,7 @@
   }
   {
     targetId: +cl-celebration-audience::lines
-    charEvents: {reqCharFlags: +goat}
+    charEvents: { reqCharFlags: +goat }
     text: txt-cl-celebration-audience-goat
   }
 ]

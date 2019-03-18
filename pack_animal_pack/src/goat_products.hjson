@@ -1,83 +1,66 @@
 [
-  # If the goat is female and there's an animal handler or bedouin, then produce milk every 3 days.
-  {
-    id: st-produce-goat-milk
-    debugCategory: Animals
-    title: txt-st-produce-goat-milk-title
-    description: txt-st-produce-goat-milk
-    sprite: st_produce_milk
-    dayEvents: {
-      reqAge: 3..
-      charEvents: {
-        reqCharFlags: +nativeAnimalHandler | +bedouin
-        items: {it-goat-milk: 1}
-      }
-      resetStatusAge: true
-    }
-  }
-  
   # Goat milk spoils very quickly, but can be consumed for sanity, or made into cheese by a mid-level cook.
   {
     id: it-goat-milk
     name: txt-it-goat-milk-name
     description: txt-it-goat-milk
-    debugCategory: sanity
+    debugCategory: animal products
     sprite: goat_milk
     value: 5
     maxStack: 10
     autoRemove: true
-    dayEvents: {
-      slots: 1
-      reqPartyStatus: -expire-goat-milk
-      setPartyStatus: +expire-goat-milk
-    }
+    addStatus: st-spoil-goat-milk
     useEvents: {
       select: [
         {
           prio: 0
-          charEvents: {reqStatus: +cookSanity-4, chat: cl-cook-meat}
+          charEvents: { reqStatus: +cookSanity-4, chat: cl-make-cheese-perfect }
           removeItem: true
-          items: {it-goat-cheese-perfect: 1}
+          items: { it-goat-cheese-perfect: 1 }
         }
         {
           prio: 1
-          charEvents: {reqStatus: +cookSanity-3, chat: cl-cook-meat}
+          charEvents: { reqStatus: +cookSanity-3, chat: cl-make-cheese-mediocre }
           removeItem: true
-          items: {it-goat-cheese-tangy: 1}
+          items: { it-goat-cheese-mediocre: 1 }
         }
         {
           prio: 2
-          charEvents: {reqStatus: +cookSanity-2, chat: cl-cook-meat-fail}
+          charEvents: { reqStatus: +cookSanity-2, chat: cl-cook-meat-fail }
           removeItem: true
-          items: {it-goat-cheese-sour: 1}
+          items: { it-goat-cheese-poor: 1 }
         }
         {
           prio: 3
           sanity: 5
           playSound: sfx_drink_var1 sfx_drink_var2
-          chat: cl-it-goat-milk
+          chat: cl-it-milk
           removeItem: true
         }
       ]
     }
   }
+
+  # A little bit of a hack to get the milk to spoil. Items don't get consistent aging statuses with day
+  # events, so this status gets applied to the party when milk is received.
   {
-    id: cl-it-goat-milk
-    lines: [
-      {text: txt-cl-it-goat-milk, reqCharFlags: +humanoid}
-    ]
-  }
-  # A little bit of a hack to get the milk to expire. Items don't get consistent statuses with day events,
-  # so this status gets applied to the party when milk is received. 
-  {
-    id: st-expire-goat-milk
+    id: st-spoil-goat-milk
     debugCategory: internal
     dayEvents: [
       {
-        prio: 0
-        optional: true
-        reqItems: {it-goat-milk: 0}
-        removeStatus: true
+        prio: 1
+        reqBiomeFlags: -arctic
+        reqAge: 4..
+        # There's a very small chance the milk won't spoil immediately.
+        select: [
+          { slots: 1 }
+          {
+            slots: 9
+            reqItems: { it-goat-milk: 1.. }
+            items: { it-goat-milk: -1 }
+            resetStatusAge: true
+          }
+        ]
       }
       {
         prio: 1
@@ -86,46 +69,65 @@
         reqAge: 12..
         # There's a small chance the milk won't spoil immediately.
         select: [
-          {slots: 3}
+          { slots: 3 }
           {
             slots: 7
-            reqItems: {it-goat-milk: 1..}
-            items: {it-goat-milk: -1}
+            reqItems: { it-goat-milk: 1.. }
+            items: { it-goat-milk: -1 }
+            resetStatusAge: true
+          }
+        ]
+      }
+      # Try to simulate individual aging of milk by checking if the party has 2 or more
+      # in inventory. They are likely milking a goat and gaining 1 milk every 3 days, which
+      # means we need to expire a milk 3 days after the last one, otherwise they accumalate.
+      # This keeps the milk count down to 1-3 in non-artic conditions, and 4-5 in arctic.
+      {
+        prio: 2
+        reqBiomeFlags: -arctic
+        reqItems: { it-goat-milk: 2.. }
+        reqAge: 3..
+        # There's a very small chance the milk won't spoil immediately.
+        select: [
+          { slots: 1 }
+          {
+            slots: 9
+            items: { it-goat-milk: -1 }
             resetStatusAge: true
           }
         ]
       }
       {
-        prio: 1
-        reqBiomeFlags: -arctic
-        reqAge: 4..
-        # There's a very small chance the milk won't spoil immediately.
+        prio: 2
+        reqBiomeFlags: +arctic
+        reqItems: { it-goat-milk: 5.. }
+        reqAge: 3..
+        # There's a small chance the milk won't spoil immediately.
         select: [
-          {slots: 1}
+          { slots: 3 }
           {
-            slots: 9
-            reqItems: {it-goat-milk: 1..}
-            items: {it-goat-milk: -1}
+            slots: 7
+            items: { it-goat-milk: -1 }
             resetStatusAge: true
           }
         ]
       }
     ]
   }
-  
+
   # Milk can be used for hydration if the trek is out of water.
-  #{ 
+  #{
   #  targetId: +tl-desert::moveCost
   #  data: {it-goat-milk: 5}
   #}
-  
+
   # All things cheese.
   {
-    id: it-goat-cheese-sour
-    name: txt-it-goat-cheese-sour-name
-    description: txt-it-goat-cheese-sour
-    debugCategory: sanity
-    sprite: goat_cheese_sour
+    id: it-goat-cheese-poor
+    name: txt-it-goat-cheese-poor-name
+    description: txt-it-goat-cheese-poor
+    debugCategory: animal products
+    sprite: goat_cheese_poor
     value: 3
     maxStack: 10
     autoRemove: true
@@ -135,24 +137,18 @@
         sanity: 7
         setPartyFlags: +nonCocaUsers
         playSound: sfx_eat_var1 sfx_eat_var2
-        chat: cl-item-goat-cheese-sour
+        chat: cl-item-cheese-poor
         removeItem: true
       }
-    ]   
-  }
-  {
-    id: cl-item-goat-cheese-sour
-    lines: [
-      {text: txt-cl-item-goat-cheese-sour, reqCharFlags: +humanoid}
     ]
   }
-  
+
   {
-    id: it-goat-cheese-tangy
-    name: txt-it-goat-cheese-tangy-name
-    description: txt-it-goat-cheese-tangy
-    debugCategory: sanity
-    sprite: goat_cheese_tangy
+    id: it-goat-cheese-mediocre
+    name: txt-it-goat-cheese-mediocre-name
+    description: txt-it-goat-cheese-mediocre
+    debugCategory: animal products
+    sprite: goat_cheese_mediocre
     value: 5
     maxStack: 10
     autoRemove: true
@@ -162,25 +158,19 @@
         sanity: 10
         setPartyFlags: +nonCocaUsers
         playSound: sfx_eat_var1 sfx_eat_var2
-        chat: cl-item-goat-cheese-tangy
+        chat: cl-item-cheese-mediocre
         removeItem: true
       }
-    ]   
-  }
-  {
-    id: cl-item-goat-cheese-tangy
-    lines: [
-      {text: txt-cl-item-goat-cheese-tangy, reqCharFlags: +humanoid}
     ]
   }
- 
+
   {
     id: it-goat-cheese-perfect
     name: txt-it-goat-cheese-perfect-name
     description: txt-it-goat-cheese-perfect
-    debugCategory: sanity
+    debugCategory: animal products
     sprite: goat_cheese_perfect
-    value: {base: 5, mission: 15, polarStation: 20, village: 10, karma: 1}
+    value: { base: 5, mission: 15, polarStation: 20, village: 10, karma: 1 }
     maxStack: 10
     autoRemove: true
     useEvents: [
@@ -189,15 +179,9 @@
         sanity: 15
         setPartyFlags: +nonCocaUsers
         playSound: sfx_eat_var1 sfx_eat_var2
-        chat: cl-item-goat-cheese-perfect
+        chat: cl-item-cheese-perfect
         removeItem: true
       }
-    ]   
-  }
-  {
-    id: cl-item-goat-cheese-perfect
-    lines: [
-      {text: txt-cl-item-goat-cheese-perfect, reqCharFlags: +humanoid}
     ]
   }
 ]
