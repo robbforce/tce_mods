@@ -1,0 +1,45 @@
+[
+  # Modify some of the item lists so delicious and nutritious goat cheese can be found.
+  {
+    targetId: *il-loot-edible::items
+    data: [
+      { slots: 1, it-goat-cheese-perfect: 3 }
+    ]
+  }
+  {
+    targetId: *il-loot-edible-easy::items
+    data: [
+      { slots: 1, it-goat-cheese-perfect: 7 }
+    ]
+  }
+  {
+    targetId: *il-loot-edibleNative::items
+    data: [
+      { slots: 1, it-goat-cheese-perfect: 3 }
+    ]
+  }
+  {
+    targetId: *il-loot-combat-edibleNative::items
+    data: [
+      { slots: 1, it-goat-cheese-perfect: 1 }
+    ]
+  }
+  {
+    targetId: *il-loot-edibleNative-easy::items
+    data: [
+      { slots: 1, it-goat-cheese-perfect: 5 }
+    ]
+  }
+  {
+    targetId: *il-loot-native::items
+    data: [
+      { slots: 3, it-goat-cheese-perfect: 4 }
+    ]
+  }
+  {
+    targetId: *il-trade-village::items
+    data: [
+      { slots: 3, it-goat-cheese-perfect: 7 }
+    ]
+  }
+]

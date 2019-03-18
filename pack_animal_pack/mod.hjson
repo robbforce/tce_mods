@@ -92,6 +92,10 @@
     {
       import: pack_animal_pack/src/pap_chat.hjson
     }
+    {
+      import: pack_animal_pack/src/pap_items.hjson
+    }
+    {
       import: pack_animal_pack/src/pap_packAnimals.hjson
     }
     {
