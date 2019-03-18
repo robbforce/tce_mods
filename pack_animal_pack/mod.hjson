@@ -17,13 +17,15 @@
       id: preview_pap
       file: pack_animal_pack/img/preview_pap.png
     }
-		{
+    {
 			import: pack_animal_pack/img/image_horse.hjson
 		}
 		{
 			import: pack_animal_pack/img/image_goat.hjson
 		}
-		{
+    {
+      import: pack_animal_pack/img/image_horse.hjson
+    }
 			import: pack_animal_pack/img/image_pap.hjson
 		}
 	],

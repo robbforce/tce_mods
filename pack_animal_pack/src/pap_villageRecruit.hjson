@@ -8,6 +8,10 @@
     targetId: +evt-village-recruit-select-animal::select
     ref: evt-village-recruit-goat
   }
+  {
+    targetId: +evt-village-recruit-select-animal::select
+    ref: evt-village-recruit-horse
+  }
     ]
   }
 
@@ -54,9 +58,27 @@
             setPartyFlags: +recruitedSomebody
             addNPC: true
             select: evt-village-main-update
+            #showPersonInfo: true
           }
         }
       }
     ]
+  }
+
+  # Recruit a horse to the party.
+  {
+    id: evt-village-recruit-horse
+    reqLocationFlags: +tribeWarriors | +tribeScouts | +tribeShamans
+    npc: anm-horse
+    npcEvents: {
+      actions: {
+        actionText: txt-anm-horse-title
+        text: txt-evt-village-recruit-animal-generic
+        setPartyFlags: +recruitedSomebody
+        addNPC: true
+        select: evt-village-main-update
+        #showPersonInfo: true
+      }
+    }
   }
 ]

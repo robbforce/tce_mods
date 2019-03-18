@@ -3,9 +3,6 @@
     id: anm-horse
     title: txt-anm-horse-title
     description: txt-anm-horse
-    health: 8
-    capacity: 3
-    flags: +animal +packAnimal +mammal
     debugCategory: Pack Animal
     variations: [
       {
@@ -30,11 +27,14 @@
         miniSprite: minisprite_horse_03
       }
     ]
-    extraSprites: 
+    extraSprites:
     {
       crates: crates_horse
       saddle: saddle_horse
     }
+    health: 8
+    capacity: 3
+    flags: +animal +packAnimal +mammal
     isMountable: true
     mountedStatuses: st-mount-3
     bonus: {capacity: -2, reqMounted: true}
