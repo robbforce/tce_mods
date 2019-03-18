@@ -18,8 +18,8 @@
       file: pack_animal_pack/img/preview_pap.png
     }
     {
-			import: pack_animal_pack/img/image_horse.hjson
-		}
+      import: pack_animal_pack/img/image_buffalo.hjson
+    }
 		{
 			import: pack_animal_pack/img/image_goat.hjson
 		}
@@ -35,11 +35,13 @@
     # Add a horse that can be recruited at normal native villages. It behaves like a normal pack animal,
     # can carry crates or be a fast mount.
     {
-			import: pack_animal_pack/src/horse_character.hjson
-		}
+      import: pack_animal_pack/src/buffalo_character.hjson
+    }
     # Add a goat that can be recruited at normal native villages. It behaves like a normal pack animal,
     # but has interesting interactions with specific crew members.
     {
+      import: pack_animal_pack/src/buffalo_products.hjson
+    }
 			import: pack_animal_pack/src/goat_character.hjson
 		}
     # Female goats will produce milk, which can be made into delicious (or not) goat cheese if there's a cook.

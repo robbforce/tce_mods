@@ -12,6 +12,37 @@
     targetId: +evt-village-recruit-select-animal::select
     ref: evt-village-recruit-horse
   }
+  # Replace the buffalo recruit event now that we've added modified females.
+  {
+    targetId: /evt-village-recruit-buffalo
+    reqLocationFlags: +tribeWarriors | +tribeScouts | +tribeShamans
+    select: [
+      {
+        npc: anm-waterBuffalo-female
+        npcEvents: {
+          actions: {
+            actionText: txt-anm-waterBuffalo-title
+            text: txt-evt-village-recruit-animal-generic
+            setPartyFlags: +recruitedSomebody
+            addNPC: true
+            select: evt-village-main-update
+            #showPersonInfo: true
+          }
+        }
+      }
+      {
+        npc: anm-waterBuffalo
+        npcEvents: {
+          actions: {
+            actionText: txt-anm-waterBuffalo-title
+            text: txt-evt-village-recruit-animal-generic
+            setPartyFlags: +recruitedSomebody
+            addNPC: true
+            select: evt-village-main-update
+            #showPersonInfo: true
+          }
+        }
+      }
     ]
   }
 

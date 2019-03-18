@@ -1,0 +1,19 @@
+[
+  # Milk & cheese related.
+  {
+    id: buffalo_milk
+    file: pack_animal_pack/img/milk_buffalo.png
+  }
+  {
+    id: buffalo_cheese_poor
+    file: pack_animal_pack/img/cheese_buffalo_poor.png
+  }
+  {
+    id: buffalo_cheese_mediocre
+    file: pack_animal_pack/img/cheese_buffalo_mediocre.png
+  }
+  {
+    id: buffalo_cheese_perfect
+    file: pack_animal_pack/img/cheese_buffalo_perfect.png
+  }
+]
