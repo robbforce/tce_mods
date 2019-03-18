@@ -1,18 +1,18 @@
 {
-	modInfo:
-	{
-		id: pack_animal_pack
-		name: Pack animal pack
-		authors: fubarbarian
-		version: "0.0.2.0"
-		preview: preview_pap
+  modInfo:
+  {
+    id: pack_animal_pack
+    name: Pack Animal Pack
+    authors: fubarbarian
+    version: "0.3.1.0"
+    preview: preview_pap
     twitter: n/a
     weblink: n/a
-    mail: test@email.com
+    mail: robb_force@hotmail.com
     description: "A collection of pack animals with a little somethin' somethin'."
     defaultLang: en
-	},
-	imageData:[
+  },
+  imageData:[
     {
       id: preview_pap
       file: pack_animal_pack/img/preview_pap.png
